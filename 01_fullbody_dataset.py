@@ -12,7 +12,9 @@ cam.set(3, 640) # set video width
 
 cam.set(4, 480) # set video height
 
-body_detector = cv2.CascadeClassifier('/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_fullbody.xml') #여 부분을 파이썬 인터페이스에서 경로참조 해갖고 .xml파일
+face_detector = cv2.CascadeClassifier('/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_frontalface_default.xml') 
+
+#body_detector = cv2.CascadeClassifier('/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_fullbody.xml') #여 부분을 파이썬 인터페이스에서 경로참조 해갖고 .xml파일
 #참조 했으면 좋겠음
 
 
@@ -38,13 +40,29 @@ while(True):
     #img = cv2.flip(img, -1) # flip video image vertically
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    
+    faces = face_detector.detectMultiScale(gray, 1.3, 5)
 
-    bodies = body_detector.detectMultiScale(gray, 1.3, 5)
+    #bodies = body_detector.detectMultiScale(gray, 1.3, 5)
 
     
-    for (x,y,w,h) in bodies: #얼굴이 인식되는 동안에는,
+    for (x,y,w,h) in faces:
+        
+        cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
+        
+        #face_image_gray = gray[y:y+h, x:x+w]
+        
+       # face_image_color = img[y:y+h, x:x+w]
+        
+    
+        #faces_in_body = body_detector.detectMultiScale(face_image_gray)
 
-        cv2.rectangle(img, (x,y), (x+w,y+h), (255,0,0), 2)   #좌표값 만큼 얼굴의 사각형을 그려준다.  
+        
+        
+        #for (xf,yf,wf,hf) in faces_in_body:
+            
+            #cv2.rectangle(face_image_color,(xf,yf),(xf+wf,yf+hf),(255,0,0),2)
+        
 
         count += 1 #사진 장수 카운트업 
         

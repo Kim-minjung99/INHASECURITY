@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+#카메라로 촬영한 30장의 사진을 학습시켜주는 기능을 한다.
+
+#이 코드를 간단하게 설명하자면 dataset 디렉토리에 존재하는 이미지 파일들을 불러와서 np.array로 만들고
+#이를 recognizer.train()을 통해 학습시켜 그 결과를 recognizer.write()을 통해 trainer.yml 파일로 저장한다
+
+# -*- coding: utf-8 -*-
 #카메라로 촬영한 30장의 사진을 학습시켜주는 기능을 한다. 
 import cv2
 
@@ -14,9 +20,9 @@ import os
 
 path = 'trainervideo'
 
-recognizer = cv2.body.LBPHFaceRecognizer_create()
+recognizer = cv2.face.LBPHFaceRecognizer_create()
 
-detector = cv2.CascadeClassifier("/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_fullbody.xml");
+detector = cv2.CascadeClassifier("/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_frontalface_default.xml");
 
 
 
@@ -38,9 +44,9 @@ def getImagesAndLabels(path):
 
         id = int(os.path.split(imagePath)[-1].split(".")[1])
 
-        boides = detector.detectMultiScale(img_numpy)
+        faces = detector.detectMultiScale(img_numpy)
 
-        for (x,y,w,h) in boides:
+        for (x,y,w,h) in faces:
 
             faceSamples.append(img_numpy[y:y+h,x:x+w])
 
@@ -50,9 +56,9 @@ def getImagesAndLabels(path):
 
 print ("\n [INFO] Training faces. It will take a few seconds. Wait ...")
 
-boides,ids = getImagesAndLabels(path)
+faces,ids = getImagesAndLabels(path)
 
-recognizer.train(boides, np.array(ids))
+recognizer.train(faces, np.array(ids))
 
 
 
