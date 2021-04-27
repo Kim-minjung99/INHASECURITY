@@ -86,49 +86,40 @@ while True:
         minSize = (int(minW), int(minH)),
 
        )
+    
     for (x,y,w,h) in faces:
         
         cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
         
-        face_image_gray = gray[y:y+h, x:x+w]
+        #face_image_gray = gray[y:y+h, x:x+w]
         
-        face_image_color = img[y:y+h, x:x+w]
+        #face_image_color = img[y:y+h, x:x+w]
         
-        faces_in_body = body_detector.detectMultiScale(face_image_gray, scaleFactor = 1.2, minNeighbors = 5, minSize = (int(minW), int(minH)),)
+        #faces_in_body = body_detector.detectMultiScale(face_image_gray, scaleFactor = 1.2, minNeighbors = 5, minSize = (int(minW), int(minH)),)
 
-    #for(x,y,w,h) in bodies:
+        for (x,y,w,h) in bodies:
 
-        #cv2.rectangle(img, (x,y), (x+w,y+h), (0,255,0), 2)
+            bodiesRectangle = cv2.rectangle(img, (x,y), (x+w,y+h), (0,255,0), 2)
 
-        id, confidence = recognizer.predict(gray[y:y+h,x:x+w])
+            id, confidence = recognizer.predict(gray[y:y+h,x:x+w])
 
-        # Check if confidence is less them 100 ==> "0" is perfect match
+            # Check if confidence is less them 100 ==> "0" is perfect match
 
-        if (100-confidence  >= 50):
+            if (100-confidence  >= 50):
 
-            id = names[id] #사람의 이름 그니까 
+                id = names[id] #사람의 이름 그니까 
 
-            confidence = "  {0}%".format(round(100 - confidence)) #만약 정확도가 100이하라면 100에서 정확도를 뺴서 인식도를 나타내라
+                confidence = "  {0}%".format(round(100 - confidence)) #만약 정확도가 100이하라면 100에서 정확도를 뺴서 인식도를 나타내라
             
-            cv2.putText(img, str(id), (x+5,y-5), font, 1, (255,255,255), 2) #사람이름 이름 출력 
+                cv2.putText(img, str(id), (x+5,y-5), font, 1, (255,255,255), 2) #사람이름 이름 출력 
 
-            cv2.putText(img, str(confidence), (x+5,y+h-5), font, 1, (255,255,0), 1)  #정확도 퍼센트 출력 
+                cv2.putText(img, str(confidence), (x+5,y+h-5), font, 1, (255,255,0), 1)  #정확도 퍼센트 출력 
             
-        elif (100-confidence <= 40) :
-        #else:
-
-           # id = "unknown"
-            
-            #여기서 삽입
-           
-            #for (xf,yf,wf,hf) in faces_in_body:
-            
-                #cv2.rectangle(face_image_color,(xf,yf),(xf+wf,yf+hf),(255,0,0),2)
+            elif (100-confidence <= 40) :
+        
+                for (x,y,w,h) in bodies:
                 
-                #cv2.rectangle(img,(x,y),(x+w+100,y+h+500),(255,255,0),2)
-                
-            
-                body_img = img[y:y+h, x:x+w] # 인식된 얼굴 이미지 crop
+                body_img = bodiesRectangle[y:y+h, x:x+w] # 인식된 얼굴 이미지 crop
 
                 body_img = cv2.resize(body_img, dsize=(0, 0), fx=0.04, fy=0.04) # 축소
 
