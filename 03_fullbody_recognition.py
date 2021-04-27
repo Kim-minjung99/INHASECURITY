@@ -119,13 +119,13 @@ while True:
         
                 for (x,y,w,h) in bodies:
                 
-                body_img = bodiesRectangle[y:y+h, x:x+w] # 인식된 얼굴 이미지 crop
+                    body_img = bodiesRectangle[y:y+h, x:x+w] # 인식된 얼굴 이미지 crop
 
-                body_img = cv2.resize(body_img, dsize=(0, 0), fx=0.04, fy=0.04) # 축소
+                    body_img = cv2.resize(body_img, dsize=(0, 0), fx=0.04, fy=0.04) # 축소
 
-                body_img = cv2.resize(body_img, (w, h), interpolation=cv2.INTER_AREA) # 확대
+                    body_img = cv2.resize(body_img, (w, h), interpolation=cv2.INTER_AREA) # 확대
 
-                img[y:y+h, x:x+w] = body_img
+                    img[y:y+h, x:x+w] = body_img
             
             #여기까지 
 
