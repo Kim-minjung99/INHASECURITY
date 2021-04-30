@@ -29,7 +29,7 @@ id = 0
 
 # 이런식으로 사용자의 이름을 사용자 수만큼 추가해준다.
 
-names = ['None', 'loze', 'willy', 'minjung', 'minjung'] #찾고자하는 사람을 등록하여준다. 여기다가 값을 받아서 사람찾기 이름 등록하는 부분을 구현해주면 될듯 
+names = ['None', 'loze', 'junyoung', 'minjung', 'minjung'] #찾고자하는 사람을 등록하여준다. 여기다가 값을 받아서 사람찾기 이름 등록하는 부분을 구현해주면 될듯 
 
 
 
@@ -55,7 +55,7 @@ while True:
 
     ret, img =cam.read()
 
-    img = cv2.flip(img, -1) # Flip vertically
+    img = cv2.flip(img, 1) # Flip vertically
 
     gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
     
@@ -82,7 +82,7 @@ while True:
 
         cv2.rectangle(img, (x,y), (x+w,y+h), (0,255,0), 2)
 
-        id, confidence = recognizer.predict(gray[y:y+h,x:x+w])
+        id, confidence = recognizer.predict(gray[y:y+h,x:x+w]) #정확도 측정 
 
         # Check if confidence is less them 100 ==> "0" is perfect match
 
@@ -92,6 +92,10 @@ while True:
 
             confidence = "  {0}%".format(round(100 - confidence)) #만약 정확도가 100이하라면 100에서 정확도를 뺴서 인식도를 나타내라
             
+            
+            cv2.putText(img, str(id), (x+5,y-5), font, 1, (255,255,255), 2) #사람이름 이름 출력 
+
+            cv2.putText(img, str(confidence), (x+5,y+h-5), font, 1, (255,255,0), 1)  #정확도 퍼센트 출력 
             
             
         elif (100-confidence <= 40) :
@@ -108,8 +112,11 @@ while True:
             face_img = cv2.resize(face_img, dsize=(0, 0), fx=0.04, fy=0.04) # 축소
 
             face_img = cv2.resize(face_img, (w, h), interpolation=cv2.INTER_AREA) # 확대
+        
 
             img[y:y+h, x:x+w] = face_img
+            
+#            img[y:y+h, x:x+w] = cv2.resize(img[y:y+h, x:x+w], dsize=(w, h), interpolation=cv2.INTER_LINEAR_EXACT)
             
             #여기까지 
 
@@ -118,12 +125,10 @@ while True:
 
         
 
-        cv2.putText(img, str(id), (x+5,y-5), font, 1, (255,255,255), 2) #사람이름 이름 출력 
-
-        cv2.putText(img, str(confidence), (x+5,y+h-5), font, 1, (255,255,0), 1)  #정확도 퍼센트 출력 
+        
 
     
-
+    
     cv2.imshow('camera',img)
     
     
