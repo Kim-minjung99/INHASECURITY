@@ -86,7 +86,7 @@ while(True):
 
         break
 
-    elif count >= 100: # Take 30 face sample and stop video
+    elif count >= 400: # Take 30 face sample and stop video
 
          break
 
