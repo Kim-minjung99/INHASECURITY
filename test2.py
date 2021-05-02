@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+##사진을 받아 뿌려주는 
 import numpy as np
 import cv2
 from matplotlib import pyplot as plt
