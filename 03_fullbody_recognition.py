@@ -47,6 +47,7 @@ def Detect():
     # Initialize and start realtime video capture
 
     cam = cv2.VideoCapture(0)
+    #cam=cv2.imread('/home/pi/Desktop/cctv/test.png')
 
     cam.set(3, 640) # set video widht
 
@@ -66,7 +67,7 @@ def Detect():
 
         ret, img =cam.read()
 
-        img = cv2.flip(img, 1) # Flip vertically
+        #img = cv2.flip(img, 1) # Flip vertically
 
         gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
     
@@ -160,9 +161,9 @@ def Detect():
 # Do a bit of cleanup
 
     print("\n [INFO] Exiting Program and cleanup stuff")
+    
+    #cv2.imshow(img)
 
     cam.release()
 
     cv2.destroyAllWindows()
-
-Detect()
