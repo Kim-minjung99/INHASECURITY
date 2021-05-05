@@ -1,0 +1,53 @@
+다음 오류때 참고하기 위한 메모
+----------------------------------------------------
+
+**절대 와이파이정보를 2개이상으로 설정해두면 안됨**
+priority로 우선순위를 주는 방법이 있긴 하다만 그것도 안먹어서 결국 밀어버림..
+
+1. 라즈베리파이 sd카드에 굽고 ssh, .conf파일 저장시킨후 (mgmt_pkg=0000)=대문자
+라파에 꽂기
+
+2. iptime 사이트 접속 후 라즈베리파이 연결 됬는지 확인하기(보통은 192.168.0.7)
+이제 무선랜이니 뭐니 다른 설정을 건들 필요는 없다
+
+3. 라즈베리파이의 연결이 iptime을 통해서 연결이 되었음을 확인한다면 putty가서 
+192.168.0.7로 접속을 하든 아니면 라즈베리파이 전용 도메인 주소 "raspberrypi.mshome.net" 하기
+https://wikidocs.net/3200 참조
+
+4. 연결되면 pi,raspberry 로 로그인후 
+	 4.6 터미널에 sudo apt install xrdp 입력하여 원격설정 프로그램 실행 (12:48​)
+	 4.7 설치가 끝나면 sudo reboot으로 재시작 (13:35​)
+	 4.8 시작버튼 옆의 실행에 '원격 데스크톱 연결' 검색 후 실행 (14:12​)
+	 4.9 컴퓨터에 라즈베리파이 IP:3389를 입력(ex: 192.168.1.73:3389) 후 엔터 (14:24​)
+	 4.10 이후 GUI 환경에서 라즈베리파이를 원격으로 사용가능(우선 비밀번호부터 바꾸세요)
+https://www.youtube.com/watch?v=OcM9WRDaTOk&list=PLgkpDfSY2BezjRnkM3CvfeejgqJF_mZFS&index=3
+이사람꺼 확인
+(원격으로 라파다루기까지 가능)
+
+5. 한글설정 까지 해주고... 
+마찬가지로 https://youtu.be/sUr9ivMK80A?list=PLgkpDfSY2BezjRnkM3CvfeejgqJF_mZFS 확인
+
+6. 라파에서 기본 설정 다해주면 카메라 설정이랑 opencv파일 깔기도 해야한다.
+카메라깔기 : https://blog.naver.com/ljy9378/221431122137
+Opencv 깔기 : https://blog.naver.com/ljy9378/221434540374
+
+근데 opencv가 그냥 포스트로 하면 중간에 stretch파일이 없길래 댓글참조
+
+		1. sudo apt-get update
+		2. wget https://github.com/dltpdn/opencv-for-rpi/releases/download/4.2.0_buster_pi3b/opencv4.2.0.deb.tar
+		3. tar -xvf opencv4.2.0.deb.tar
+		4. sudo apt-get install -y ./OpenCV*.deb
+		5. pkg-config --modversion opencv4
+
+		로제님 말씀따라 저도 make -j4 방식 써가면서 빌드하는 방식으로 하니 특정 파일에서 실행 불가능하며 중단되고(막 어쩔때는 39퍼에서 오류뜨고 59퍼에서 오류뜨고 하더군요...), 중간에 막 꺼지고 해서 거진 2틀 연속 시간낭비하고 있었는데
+
+		올려주신 빌드 없이 설치하는 법으로 하니까 3분컷이네요 ㅋㅋㅋㅋ 정말 감사합니다.
+		[출처] 6편 : 라즈베리 파이에 OpenCV 설치하기|작성자 로졔
+
+이대로 하면 될듯
+
+7. 다음에는 내가 올려둔 깃허브 파일 다운받아서 사용하면 될듯하다.
+
+
+
+

@@ -1,0 +1,59 @@
+<시작 환경설정>
+
+라즈베리 무선 ip : 192.168.0.7(포트까지 할시 :3389붙이기 )
+
+3389는 내부포트번호
+11111는 외부포트번호
+
+고정 ip를 만들어줬기떄문에
+minjung5229.
+
+ddns 주소는 minjung5229.iptime.org
+
+wifi이름 ; iptime
+비밀번호 : key_mgmt=NONE
+
+
+
+raspberrypi.mshome.net(이제는 고정ip 192.168.0.7 써주면 된다.)
+만약에 추가 ip연결 필요시 라즈베리 안으로 들어가서 와이파이 설정 해주면 될거같음
+
+eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.137.43  netmask 255.255.255.0  broadcast 192.168.137.255
+        inet6 fe80::41dd:d8bb:dead:6903  prefixlen 64  scopeid 0x20<link>
+        ether dc:a6:32:88:ef:49  txqueuelen 1000  (Ethernet)
+        RX packets 295  bytes 30230 (29.5 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 76  bytes 10594 (10.3 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 0  bytes 0 (0.0 B)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 0  bytes 0 (0.0 B)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+wlan0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 169.254.170.75  netmask 255.255.0.0  broadcast 169.254.255.255
+        inet6 fe80::6811:bbe5:1f4d:b08b  prefixlen 64  scopeid 0x20<link>
+        ether dc:a6:32:88:ef:4a  txqueuelen 1000  (Ethernet)
+        RX packets 163  bytes 14006 (13.6 KiB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 39  bytes 6784 (6.6 KiB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+------------------------------------------------------------------------------------------
+
+<파이카메라 키는법>
+
+-사진
+raspistill -o cam.jpg (cam.jpg는 사진이름)
+
+-동영상
+raspivid -o vid.h264 (vid.h264도 동영상 이름인데 의미가 뭔지?)
+
+보통 찍고나서 파일 최상위에 저장되긴한다.
+
