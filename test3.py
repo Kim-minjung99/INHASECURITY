@@ -2,15 +2,33 @@
 ##이거는 카메라를 틀어서 진행시키는것 
 import numpy as np
 import cv2
-#from matplotlib import pyplot as plt
+import picamera
 import os
+os.environ['OPENCV_IO_MAX_IMAGE_PIXELS']=str(2**64)
+import datetime
 ##샾 두개는 카메라를 키거나 영상 이용시 사용할 코드이다.
 
-face_cascade = cv2.CascadeClassifier(
-    '/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_frontalface_default.xml')
-body_cascade = cv2.CascadeClassifier('/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_fullbody.xml')
+##savepath = '/home/pi/Desktop/cctv/savepath' #동영상저장경로
+##def record():
+##        with picamera.PiCamera() as camera:
+##            camera.resolution = (640,480)
+##            now = datetime.datetime.now()
+##            filename = now.strftime('%Y-%m-%d %H:%M:%S')
+##            camera.start_recording(output = savepath + '/' + filename +'.h264')##
+##            camera.wait_recording(10)
+##            camera.stop_recording()
 
-cam = cv2.VideoCapture('/home/pi/Desktop/cctv/bodysample.h264')
+##while True:
+##    record() cctv역할로 카메라 촬영 기능 구동. 10초에 한번씩 동영상 촬영. 지정된 경로로 지정된 파일명으로 저장 
+
+
+
+face_cascade = cv2.CascadeClassifier(r"/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_frontalface_default.xml")
+body_cascade = cv2.CascadeClassifier(r"/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_fullbody.xml")
+
+cam = cv2.VideoCapture(0) #저장된 영상 재생
+#cam=cv2.VideoCapture('/home/pi/Desktop/cctv/savepath/2021-05-12 16:05:05.h264')
+
 
 cam.set(3, 640) # set video widht
 
@@ -20,7 +38,7 @@ cam.set(4, 480)
 
 #minH = 0.1*cam.get(4)
 
-
+mozaic=cv2.imread('/home/pi/Desktop/cctv/mozaic.png')
 ##image = cv2.imread('/home/pi/Desktop/cctv/test.png') #이미지 경로로부터 불러오기 
 
 ##image=cv2.resize(image, dsize=(350,600),interpolation=cv2.INTER_LINEAR) #자꾸 오류떠서 그냥 화면 크기 맞춰주기(사진한정)
@@ -43,33 +61,33 @@ names = ['None', 'loze', 'junyoung', 'minjung', 'minjung']
 
 #for (x,y,w,h) in body:
 #while(True) :
-while cam.isOpened(): #이런것들이 없어야 카메라가 열린다.
-
+while cv2.waitKey(27) < 0:
+#이런것들이 없어야 카메라가 열린다.
     ret, image = cam.read()
-    #if not image is None: 
-    #        if not ret: continue
-
 
     grayImage = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) #그레이 색상으로 화면 바꿔주기 (인식용.)
     
     #body = body_cascade.detectMultiScale(grayImage, scaleFactor = 1.2, minNeighbors = 5, minSize = (int(minW), int(minH)),) ##여기가 제일 문제많이 생김 
-    body = body_cascade.detectMultiScale(grayImage,1.03,5)
+    body = body_cascade.detectMultiScale(grayImage, 1.03,5)
     
     for (x,y,w,h) in body:
     
-        cv2.rectangle(image,(x,y),(x+w,y+h),(0,0,255),3)
+        brimage = cv2.rectangle(image,(x,y),(x+w,y+h),(0,0,255),3)
+        
         body_image_gray = grayImage[y:y+h, x:x+w]
 
         body_image_color = image[y:y+h, x:x+w]
     
-        faces_in_body = face_cascade.detectMultiScale(body_image_gray,1.03,5)
+        faces_in_body = face_cascade.detectMultiScale(body_image_gray, 1.03,5)
 
         for (fx,fy,fw,fh) in faces_in_body:
-            cv2.rectangle(body_image_color,(fx,fy),(fx+fw,fy+fh),(0,255,255),2)
             
-            id, confidence = recognizer.predict(body_image_gray[y:fy+fh,x:fx+fw]) ##여기가 제일 문제많이 생김 
+            frimage = cv2.rectangle(body_image_color,(fx,fy),(fx+fw,fy+fh),(0,255,255),2)
             
-            if (100-confidence  >= 10):
+            id, confidence = recognizer.predict(grayImage[y:fy+fh,x:fx+fw]) ##여기가 제일 문제많이 생김 
+            
+            
+            if (100-confidence  >= 55):
 
                 id = names[id] #사람의 이름 그니까 
 
@@ -79,21 +97,25 @@ while cam.isOpened(): #이런것들이 없어야 카메라가 열린다.
 
                 cv2.putText(image, str(confidence), (fx+5,fy+fh-5), font, 1, (255,255,0), 1)  #정확도 퍼센트 출력
                 
-                #break
+                break
         
             
             
-            else :
+            elif (100-confidence < 55) :
+                
+                t=cv2.resize(mozaic, dsize=(w,h), interpolation=cv2.INTER_LINEAR)
+                
+                image[y:y+h, x:x+w] = t
             
-                face_img = image[y:fy+fh, x:fx+fw] # 인식된 얼굴 이미지 crop
+                #face_img = image[y:y+h, x:x+w] # 인식된 얼굴 이미지 crop
 
-                face_img = cv2.resize(face_img, dsize=(0, 0), fx=0.04, fy=0.04) # 축소
+                #face_img = cv2.resize(image, dsize=(0, 0), fx=0.04, fy=0.04) # 축소
 
-                face_img = cv2.resize(face_img, (w, h), interpolation=cv2.INTER_AREA) # 확대
+                #face_img = cv2.resize(image, (w, h), interpolation=cv2.INTER_AREA) # 확대
         
-                image[y:y+h, x:x+w] = face_img
-
-                #break
+                #image[y:y+h, x:x+w] = image
+                
+                break
         
 
  
@@ -107,7 +129,7 @@ while cam.isOpened(): #이런것들이 없어야 카메라가 열린다.
 
     cv2.imshow('camera',image) #화면출력 
 
-cv2.waitKey(0) #얘로인해서 화면이 안나올 일은 없음 
+#cv2.waitKey(0) #얘로인해서 화면이 안나올 일은 없음 
 cv2.destroyAllWindows()#누르면 꺼짐 
 
 cam.release() 

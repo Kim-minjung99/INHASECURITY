@@ -16,7 +16,7 @@ body_cascade = cv2.CascadeClassifier('/home/pi/Desktop/cctv/opencv-master/data/h
 ##cam.set(4, 480)
 
 
-image = cv2.imread('/home/pi/Desktop/cctv/test.png') #이미지 경로로부터 불러오기 여기서 나로 인식할 사람이랑 아닌 사람의 사진을 로드하는걸 결정하면 된다. (minjung=test.png, none=testnone.png)
+image = cv2.imread('/home/pi/Desktop/cctv/사진/test.png') #이미지 경로로부터 불러오기 여기서 나로 인식할 사람이랑 아닌 사람의 사진을 로드하는걸 결정하면 된다. (minjung=test.png, none=testnone.png)
 #사진 크기 줄이는 것도 고려해야한다.
 
 #image=cv2.resize(image, dsize=(0, 0), fx=0.5, fy=0.5, interpolation=cv2.INTER_AREA) #자꾸 오류떠서 그냥 화면 크기 맞춰주기(사진한정) 얘를 지우면 내이름이 출력되네..?
