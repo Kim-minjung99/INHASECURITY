@@ -26,7 +26,7 @@ import datetime
 face_cascade = cv2.CascadeClassifier(r"/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_frontalface_default.xml")
 body_cascade = cv2.CascadeClassifier(r"/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_fullbody.xml")
 
-cam = cv2.VideoCapture(0) #저장된 영상 재생
+cam = cv2.VideoCapture('/home/pi/Desktop/cctv/savepath/2021-05-10 05:15:07.h264') #저장된 영상 재생
 #cam=cv2.VideoCapture('/home/pi/Desktop/cctv/savepath/2021-05-12 16:05:05.h264')
 
 
@@ -52,7 +52,7 @@ font = cv2.FONT_HERSHEY_SIMPLEX
 
 id=0
 
-names = ['None', 'loze', 'junyoung', 'minjung', 'minjung']
+names = ['None', 'loze', 'YangDa99', 'minjung', 'minjung']
 
 #image = cv2.imread('/home/pi/Desktop/cctv/test.png')
 
@@ -116,9 +116,9 @@ while cv2.waitKey(27) < 0:
                 
                 for (x,y,w,h) in body:
                     
-                    if (cv2.rectangle(image,(x,y),(x+w,y+h),(0,0,255),3)).any() :
+                    if (cv2.rectangle(image,(x,y),(x+w,y+h),(255,255,0),3)).any() :
     
-                        cv2.rectangle(image,(x,y),(x+w,y+h),(0,0,255),3)
+                        cv2.rectangle(image,(x,y),(x+w,y+h),(255,255,0),3)
         
                         #body_image_gray = grayImage[y:y+h, x:x+w]
 
