@@ -67,12 +67,17 @@ names = ['None', 'loze', 'YangDa99', 'minjung', 'minjung']
 while cv2.waitKey(27) < 0:
 #이런것들이 없어야 카메라가 열린다.
     ret, image = cam.read()
-
+    
+    finding_image = cv2.resize(finding, dsize=(640, 480), interpolation=cv2.INTER_LINEAR) #블랙처리 이미지 선언
+    
     grayImage = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) #그레이 색상으로 화면 바꿔주기 (인식용.)
+    
+    image = finding_image #블랙처리 이미지 
     
     #body = body_cascade.detectMultiScale(grayImage, scaleFactor = 1.2, minNeighbors = 5, minSize = (int(minW), int(minH)),) ##여기가 제일 문제많이 생김 
     body = body_cascade.detectMultiScale(grayImage, 1.03,5)
     face = face_cascade.detectMultiScale(grayImage, 1.03,5)
+    
     
     
     
@@ -81,9 +86,17 @@ while cv2.waitKey(27) < 0:
         
     for (fx,fy,fw,fh) in face:
             
-        if (cv2.rectangle(image,(fx,fy),(fx+fw,fy+fh),(0,255,255),2)).any() :#얼굴을 인식했는가?
+        if (cv2.rectangle(image,(fx,fy),(fx+fw,fy+fh),(0,255,255),1)).any() :#얼굴을 인식했는가?
             
-            cv2.rectangle(image,(fx,fy),(fx+fw,fy+fh),(0,255,255),2)
+            read_image = cv2.resize(image, dsize=(640,480), interpolation=cv2.INTER_LINEAR) #실제 이미지 다시 불러오기
+            
+            image = read_image
+            
+            print('face Detected')
+             
+            image = read_image #실제이미지 적용 
+            
+            cv2.rectangle(image,(fx,fy),(fx+fw,fy+fh),(0,255,255),1)
             
             id, confidence = recognizer.predict(grayImage[fy:fy+fh,fx:fx+fw]) ##여기가 제일 문제많이 생김 
             
@@ -119,9 +132,11 @@ while cv2.waitKey(27) < 0:
                 
                 for (x,y,w,h) in body:
                     
-                    if (cv2.rectangle(image,(x,y),(x+w,y+h),(255,255,0),3)).any() :
+                    if (cv2.rectangle(image,(x,y),(x+w,y+h),(255,255,0),1)).any() :
+                        
+                        print('body Detected')
     
-                        cv2.rectangle(image,(x,y),(x+w,y+h),(255,255,0),3)
+                        cv2.rectangle(image,(x,y),(x+w,y+h),(255,255,0),1)
         
                         #body_image_gray = grayImage[y:y+h, x:x+w]
 
@@ -130,8 +145,12 @@ while cv2.waitKey(27) < 0:
                         t=cv2.resize(mozaic, dsize=(w,h), interpolation=cv2.INTER_LINEAR)
                 
                         image[y:y+h, x:x+w] = t
-        
 
+
+#elif (ret == False).any() :
+#    finding_image = cv2.resize(finding, dsize=(x,y), interpolation=cv2.INTER_LINEAR)
+#    image[y:y+h, x:x+w] = finding_image
+    
  
 
 #plt.figure(figsize=(12,12))
@@ -147,6 +166,7 @@ while cv2.waitKey(27) < 0:
 cv2.destroyAllWindows()#누르면 꺼짐 
 
 cam.release() 
+
 
 
 
