@@ -8,26 +8,14 @@ os.environ['OPENCV_IO_MAX_IMAGE_PIXELS']=str(2**64)
 import datetime
 ##샾 두개는 카메라를 키거나 영상 이용시 사용할 코드이다.
 
-##savepath = '/home/pi/Desktop/cctv/savepath' #동영상저장경로
-##def record():
-##        with picamera.PiCamera() as camera:
-##            camera.resolution = (640,480)
-##            now = datetime.datetime.now()
-##            filename = now.strftime('%Y-%m-%d %H:%M:%S')
-##            camera.start_recording(output = savepath + '/' + filename +'.h264')##
-##            camera.wait_recording(10)
-##            camera.stop_recording()
-
-##while True:
-##    record() cctv역할로 카메라 촬영 기능 구동. 10초에 한번씩 동영상 촬영. 지정된 경로로 지정된 파일명으로 저장 
-
-
+###얼굴이 인식되지 않고 바디가 인식되지 않으면 일단 블랙처리인거다 
+###수정 : 얼굴이 인식은 계속적으로 된다. 근데.. 지금 얼굴 인식이 되고 있는데, 그안에서 누군지는 모르고(얼굴만 인식중) 바디가 모자이크 처리가 안될때는 블랙처리 해줘야겠지..
+###
 
 face_cascade = cv2.CascadeClassifier(r"/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_frontalface_default.xml")
 body_cascade = cv2.CascadeClassifier(r"/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_fullbody.xml")
 
 cam = cv2.VideoCapture('/home/pi/Desktop/cctv/savepath/2021-05-10 05:15:07.h264') #저장된 영상 재생
-#cam=cv2.VideoCapture('/home/pi/Desktop/cctv/savepath/2021-05-12 16:05:05.h264')
 
 
 cam.set(3, 640) # set video widht
@@ -55,17 +43,10 @@ id=0
 
 names = ['None', 'loze', 'YangDa99', 'minjung', 'minjung']
 
-#image = cv2.imread('/home/pi/Desktop/cctv/test.png')
 
 
-#while True:
 
-#for (x,y,w,h) in body:
-#while(True) :
-
-
-while cv2.waitKey(27) < 0:
-#이런것들이 없어야 카메라가 열린다.
+while cv2.waitKey(27) < 0:   #이런것들이 없어야 카메라가 열린다.
     ret, image = cam.read()
     
     finding_image = cv2.resize(finding, dsize=(640, 480), interpolation=cv2.INTER_LINEAR) #블랙처리 이미지 선언
@@ -73,28 +54,20 @@ while cv2.waitKey(27) < 0:
     grayImage = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) #그레이 색상으로 화면 바꿔주기 (인식용.)
     
     image = finding_image #블랙처리 이미지 
-    
-    #body = body_cascade.detectMultiScale(grayImage, scaleFactor = 1.2, minNeighbors = 5, minSize = (int(minW), int(minH)),) ##여기가 제일 문제많이 생김 
+     
     body = body_cascade.detectMultiScale(grayImage, 1.03,5)
     face = face_cascade.detectMultiScale(grayImage, 1.03,5)
-    
-    
-    
-    
-        #faces_in_body = face_cascade.detectMultiScale(body_image_gray, 1.03,5)
 
         
     for (fx,fy,fw,fh) in face:
             
         if (cv2.rectangle(image,(fx,fy),(fx+fw,fy+fh),(0,255,255),1)).any() :#얼굴을 인식했는가?
             
-            read_image = cv2.resize(image, dsize=(640,480), interpolation=cv2.INTER_LINEAR) #실제 이미지 다시 불러오기
-            
-            image = read_image
+            #real_image = cv2.resize(image, dsize=(640,480), interpolation=cv2.INTER_LINEAR) #실제 이미지 다시 불러오기
             
             print('face Detected')
              
-            image = read_image #실제이미지 적용 
+            #image = real_image #실제이미지 적용 
             
             cv2.rectangle(image,(fx,fy),(fx+fw,fy+fh),(0,255,255),1)
             
@@ -116,19 +89,6 @@ while cv2.waitKey(27) < 0:
             
             
             elif (100-confidence < 10) : #내가 찾는 사람이 아니다 
-                    
-                
-            
-                #face_img = image[y:y+h, x:x+w] # 인식된 얼굴 이미지 crop
-
-                #face_img = cv2.resize(image, dsize=(0, 0), fx=0.04, fy=0.04) # 축소
-
-                #face_img = cv2.resize(image, (w, h), interpolation=cv2.INTER_AREA) # 확대
-        
-                #image[y:y+h, x:x+w] = image
-                  
-                
-                
                 
                 for (x,y,w,h) in body:
                     
@@ -145,7 +105,9 @@ while cv2.waitKey(27) < 0:
                         t=cv2.resize(mozaic, dsize=(w,h), interpolation=cv2.INTER_LINEAR)
                 
                         image[y:y+h, x:x+w] = t
-
+                        
+                     
+            
 
 #elif (ret == False).any() :
 #    finding_image = cv2.resize(finding, dsize=(x,y), interpolation=cv2.INTER_LINEAR)
