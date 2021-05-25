@@ -47,6 +47,7 @@ names = ['None', 'loze', 'YangDa99', 'minjung', 'minjung']
 
 
 while cv2.waitKey(27) < 0:   #이런것들이 없어야 카메라가 열린다.
+    
     ret, image = cam.read()
     
     finding_image = cv2.resize(finding, dsize=(640, 480), interpolation=cv2.INTER_LINEAR) #블랙처리 이미지 선언
@@ -57,7 +58,9 @@ while cv2.waitKey(27) < 0:   #이런것들이 없어야 카메라가 열린다.
      
     body = body_cascade.detectMultiScale(grayImage, 1.03,5)
     face = face_cascade.detectMultiScale(grayImage, 1.03,5)
-
+    
+    real_image = cv2.resize(image, dsize=(640,480), interpolation=cv2.INTER_LINEAR)
+    #여기 밑으로 블랙처리 코드를 넣으면 먹질 않음... for문으로 이미지 받아들이는 형태가 달라서 그런가 
         
     for (fx,fy,fw,fh) in face:
             
@@ -67,7 +70,7 @@ while cv2.waitKey(27) < 0:   #이런것들이 없어야 카메라가 열린다.
             
             print('face Detected')
              
-            #image = real_image #실제이미지 적용 
+            image = real_image #실제이미지 적용 
             
             cv2.rectangle(image,(fx,fy),(fx+fw,fy+fh),(0,255,255),1)
             
@@ -106,6 +109,10 @@ while cv2.waitKey(27) < 0:   #이런것들이 없어야 카메라가 열린다.
                 
                         image[y:y+h, x:x+w] = t
                         
+            #else:
+              #  finding_image = cv2.resize(finding, dsize=(640, 480), interpolation=cv2.INTER_LINEAR)
+               # image = finding_image
+                
                      
             
 
