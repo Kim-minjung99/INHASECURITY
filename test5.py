@@ -16,7 +16,7 @@ face_cascade = cv2.CascadeClassifier(r"/home/pi/Desktop/cctv/opencv-master/data/
 body_cascade = cv2.CascadeClassifier(r"/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_fullbody.xml")
 
 cam = cv2.VideoCapture('/home/pi/Desktop/cctv/savepath/2021-05-10 05:15:07.h264') #저장된 영상 재생
-
+#cam = cv2.VideoCapture(0)
 
 cam.set(3, 640) # set video widht
 
@@ -50,16 +50,16 @@ while cv2.waitKey(27) < 0:   #이런것들이 없어야 카메라가 열린다.
     
     ret, image = cam.read()
     
-    finding_image = cv2.resize(finding, dsize=(640, 480), interpolation=cv2.INTER_LINEAR) #블랙처리 이미지 선언
+    #finding_image = cv2.resize(finding, dsize=(640, 480), interpolation=cv2.INTER_LINEAR) #블랙처리 이미지 선언
     
     grayImage = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) #그레이 색상으로 화면 바꿔주기 (인식용.)
     
-    image = finding_image #블랙처리 이미지 
+    #image = finding_image #블랙처리 이미지 
      
     body = body_cascade.detectMultiScale(grayImage, 1.03,5)
     face = face_cascade.detectMultiScale(grayImage, 1.03,5)
     
-    real_image = cv2.resize(image, dsize=(640,480), interpolation=cv2.INTER_LINEAR)
+    #real_image = cv2.resize(image, dsize=(640,480), interpolation=cv2.INTER_LINEAR)
     #여기 밑으로 블랙처리 코드를 넣으면 먹질 않음... for문으로 이미지 받아들이는 형태가 달라서 그런가 
         
     for (fx,fy,fw,fh) in face:
@@ -70,14 +70,18 @@ while cv2.waitKey(27) < 0:   #이런것들이 없어야 카메라가 열린다.
             
             print('face Detected')
              
-            image = real_image #실제이미지 적용 
+            #image = real_image #실제이미지 적용 
             
             cv2.rectangle(image,(fx,fy),(fx+fw,fy+fh),(0,255,255),1)
             
             id, confidence = recognizer.predict(grayImage[fy:fy+fh,fx:fx+fw]) ##여기가 제일 문제많이 생김 
             
             
-            if (100-confidence  >= 10):
+            if (100-confidence >= 10):
+                
+                #real_image = cv2.resize(image, dsize=(640,480), interpolation=cv2.INTER_LINEAR)
+                
+                #image = real_image
 
                 id = names[id] #사람의 이름 그니까 
 
@@ -91,9 +95,13 @@ while cv2.waitKey(27) < 0:   #이런것들이 없어야 카메라가 열린다.
         
             
             
-            elif (100-confidence < 10) : #내가 찾는 사람이 아니다 
+            elif (100-confidence < 10) :#내가 찾는 사람이 아니다
                 
                 for (x,y,w,h) in body:
+                    
+                    #real_image = cv2.resize(image, dsize=(640,480), interpolation=cv2.INTER_LINEAR)
+                
+                    #image = real_image
                     
                     if (cv2.rectangle(image,(x,y),(x+w,y+h),(255,255,0),1)).any() :
                         
@@ -108,10 +116,21 @@ while cv2.waitKey(27) < 0:   #이런것들이 없어야 카메라가 열린다.
                         t=cv2.resize(mozaic, dsize=(w,h), interpolation=cv2.INTER_LINEAR)
                 
                         image[y:y+h, x:x+w] = t
-                        
-            #else:
-              #  finding_image = cv2.resize(finding, dsize=(640, 480), interpolation=cv2.INTER_LINEAR)
-               # image = finding_image
+                
+            else :
+                
+                finding_image = cv2.resize(finding, dsize=(640, 480), interpolation=cv2.INTER_LINEAR)
+                
+                image = finding_image
+                
+                
+            
+            
+            
+        else:
+            print('Faces are not detected')
+            
+        
                 
                      
             
