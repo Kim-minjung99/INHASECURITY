@@ -10,7 +10,6 @@ import datetime
 
 ###얼굴이 인식되지 않고 바디가 인식되지 않으면 일단 블랙처리인거다 
 ###수정 : 얼굴이 인식은 계속적으로 된다. 근데.. 지금 얼굴 인식이 되고 있는데, 그안에서 누군지는 모르고(얼굴만 인식중) 바디가 모자이크 처리가 안될때는 블랙처리 해줘야겠지..
-###
 
 face_cascade = cv2.CascadeClassifier(r"/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_frontalface_default.xml")
 body_cascade = cv2.CascadeClassifier(r"/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_fullbody.xml")
@@ -19,20 +18,10 @@ cam = cv2.VideoCapture('/home/pi/Desktop/cctv/savepath/2021-05-10 05:15:07.h264'
 #cam = cv2.VideoCapture(0)
 
 cam.set(3, 640) # set video widht
-
 cam.set(4, 480)
-
-#minW = 0.1*cam.get(3)
-
-#minH = 0.1*cam.get(4)
 
 mozaic=cv2.imread('/home/pi/Desktop/cctv/mozaic.png')
 finding=cv2.imread('/home/pi/Desktop/cctv/사진/finding.png')
-##image = cv2.imread('/home/pi/Desktop/cctv/test.png') #이미지 경로로부터 불러오기 
-
-##image=cv2.resize(image, dsize=(350,600),interpolation=cv2.INTER_LINEAR) #자꾸 오류떠서 그냥 화면 크기 맞춰주기(사진한정)
-
-##
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 recognizer.read('/home/pi/Desktop/cctv/trainer/trainer2.yml')
@@ -41,7 +30,7 @@ font = cv2.FONT_HERSHEY_SIMPLEX
 
 id=0
 
-names = ['None', 'loze', 'YangDa99', 'minjung', 'minjung']
+names = ['None', 'loze', 'YangDa99', 'minjung', 'minjung'] #사람이름 하드코딩한것... 나중에 이름 받아와서 처리해야한다.
 
 
 
@@ -49,33 +38,28 @@ names = ['None', 'loze', 'YangDa99', 'minjung', 'minjung']
 while cv2.waitKey(27) < 0:   #이런것들이 없어야 카메라가 열린다.
     
     ret, image = cam.read()
-    
-    #finding_image = cv2.resize(finding, dsize=(640, 480), interpolation=cv2.INTER_LINEAR) #블랙처리 이미지 선언
-    
+
     grayImage = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) #그레이 색상으로 화면 바꿔주기 (인식용.)
+    real_image = cv2.cvtColor(image, cv2.IMREAD_COLOR) #이미지를 디폴트 값인 컬러 이미지로 저장 
     
     #image = finding_image #블랙처리 이미지 
-     
+    
     body = body_cascade.detectMultiScale(grayImage, 1.03,5)
     face = face_cascade.detectMultiScale(grayImage, 1.03,5)
     
-    #real_image = cv2.resize(image, dsize=(640,480), interpolation=cv2.INTER_LINEAR)
     #여기 밑으로 블랙처리 코드를 넣으면 먹질 않음... for문으로 이미지 받아들이는 형태가 달라서 그런가 
         
     for (fx,fy,fw,fh) in face:
             
         if (cv2.rectangle(image,(fx,fy),(fx+fw,fy+fh),(0,255,255),1)).any() :#얼굴을 인식했는가?
             
-            #real_image = cv2.resize(image, dsize=(640,480), interpolation=cv2.INTER_LINEAR) #실제 이미지 다시 불러오기
+            real_image = cv2.resize(image, dsize=(640,480), interpolation=cv2.INTER_LINEAR) #실제 이미지 다시 불러오기
             
             print('face Detected')
-             
-            #image = real_image #실제이미지 적용 
             
             cv2.rectangle(image,(fx,fy),(fx+fw,fy+fh),(0,255,255),1)
             
             id, confidence = recognizer.predict(grayImage[fy:fy+fh,fx:fx+fw]) ##여기가 제일 문제많이 생김 
-            
             
             if (100-confidence >= 10):
                 
@@ -91,7 +75,6 @@ while cv2.waitKey(27) < 0:   #이런것들이 없어야 카메라가 열린다.
 
                 cv2.putText(image, str(confidence), (fx+5,fy+fh-5), font, 1, (255,255,0), 1)  #정확도 퍼센트 출력
                 
-                #break
         
             
             
@@ -116,36 +99,22 @@ while cv2.waitKey(27) < 0:   #이런것들이 없어야 카메라가 열린다.
                         t=cv2.resize(mozaic, dsize=(w,h), interpolation=cv2.INTER_LINEAR)
                 
                         image[y:y+h, x:x+w] = t
+                        
+                    else:
+                        finding_image = cv2.resize(finding, dsize=(640, 480), interpolation=cv2.INTER_LINEAR)
+                        image = finding_image
                 
-            else :
-                
+            else:#얼굴인식이 10%를 넘지도, 10%를 못넘기지도 못한다면 에러처리 
+                print('detected ERROR')
                 finding_image = cv2.resize(finding, dsize=(640, 480), interpolation=cv2.INTER_LINEAR)
-                
                 image = finding_image
-                
-                
+
             
-            
-            
-        else:
+        else: #만약 얼굴 rectangle을 그리지 못했다면?
             print('Faces are not detected')
+            finding_image = cv2.resize(finding, dsize=(640, 480), interpolation=cv2.INTER_LINEAR) #블랙처리 이미지 선언
+            image = finding_image
             
-        
-                
-                     
-            
-
-#elif (ret == False).any() :
-#    finding_image = cv2.resize(finding, dsize=(x,y), interpolation=cv2.INTER_LINEAR)
-#    image[y:y+h, x:x+w] = finding_image
-    
- 
-
-#plt.figure(figsize=(12,12))
-#plt.imshow('camera',image)
-#plt.xticks([]), plt.yticks([])  # to hide tick values on X and Y axis
-#plt.show()
-
 
 
     cv2.imshow('camera',image) #화면출력 
