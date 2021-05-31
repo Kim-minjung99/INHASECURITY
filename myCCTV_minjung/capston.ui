@@ -43,7 +43,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
@@ -562,8 +562,11 @@
   <customwidget>
    <class>QVideoWidget</class>
    <extends>QWidget</extends>
-   <header>PyQt5.QtMultimediaWidgets</header>
+   <header location="global">PyQt5.QtMultimediaWidgets</header>
    <container>1</container>
+   <slots>
+    <slot>PlayButtonM()</slot>
+   </slots>
   </customwidget>
  </customwidgets>
  <resources/>

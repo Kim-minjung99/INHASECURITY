@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1179</width>
-    <height>786</height>
+    <width>1198</width>
+    <height>769</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -50,9 +50,9 @@
      <widget class="QGroupBox" name="VideoLoadBox">
       <property name="geometry">
        <rect>
-        <x>640</x>
-        <y>310</y>
-        <width>461</width>
+        <x>30</x>
+        <y>340</y>
+        <width>1111</width>
         <height>101</height>
        </rect>
       </property>
@@ -63,9 +63,9 @@
        <property name="geometry">
         <rect>
          <x>20</x>
-         <y>50</y>
-         <width>300</width>
-         <height>20</height>
+         <y>20</y>
+         <width>951</width>
+         <height>71</height>
         </rect>
        </property>
        <property name="text">
@@ -75,8 +75,8 @@
       <widget class="QPushButton" name="LoadingButton">
        <property name="geometry">
         <rect>
-         <x>340</x>
-         <y>40</y>
+         <x>990</x>
+         <y>60</y>
          <width>112</width>
          <height>34</height>
         </rect>
@@ -89,9 +89,9 @@
      <widget class="QGroupBox" name="SaveGroupBox">
       <property name="geometry">
        <rect>
-        <x>640</x>
+        <x>30</x>
         <y>480</y>
-        <width>461</width>
+        <width>1111</width>
         <height>101</height>
        </rect>
       </property>
@@ -102,9 +102,9 @@
        <property name="geometry">
         <rect>
          <x>20</x>
-         <y>50</y>
-         <width>300</width>
-         <height>20</height>
+         <y>20</y>
+         <width>951</width>
+         <height>71</height>
         </rect>
        </property>
        <property name="text">
@@ -114,8 +114,8 @@
       <widget class="QPushButton" name="SaveButton">
        <property name="geometry">
         <rect>
-         <x>340</x>
-         <y>40</y>
+         <x>990</x>
+         <y>60</y>
          <width>112</width>
          <height>34</height>
         </rect>
@@ -128,9 +128,9 @@
      <widget class="QGroupBox" name="InsertNameBox">
       <property name="geometry">
        <rect>
-        <x>640</x>
-        <y>130</y>
-        <width>461</width>
+        <x>610</x>
+        <y>210</y>
+        <width>531</width>
         <height>101</height>
        </rect>
       </property>
@@ -166,8 +166,8 @@
        <rect>
         <x>33</x>
         <y>20</y>
-        <width>571</width>
-        <height>561</height>
+        <width>551</width>
+        <height>291</height>
        </rect>
       </property>
      </widget>
@@ -208,9 +208,9 @@
       <property name="geometry">
        <rect>
         <x>60</x>
-        <y>519</y>
-        <width>741</width>
-        <height>71</height>
+        <y>530</y>
+        <width>341</width>
+        <height>61</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="MenuBar">
@@ -237,13 +237,6 @@
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QPushButton" name="PauseButton">
-         <property name="text">
-          <string/>
-         </property>
-        </widget>
-       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="verticalLayoutWidget">
@@ -252,38 +245,15 @@
         <x>50</x>
         <y>20</y>
         <width>811</width>
-        <height>481</height>
+        <height>441</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QWidget" name="widget" native="true">
-         <widget class="QSlider" name="horizontalSlider">
-          <property name="geometry">
-           <rect>
-            <x>30</x>
-            <y>430</y>
-            <width>751</width>
-            <height>22</height>
-           </rect>
-          </property>
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-         </widget>
-         <widget class="QVideoWidget" name="view" native="true">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>811</width>
-            <height>421</height>
-           </rect>
-          </property>
-          <property name="autoFillBackground">
-           <bool>true</bool>
-          </property>
-         </widget>
+        <widget class="QVideoWidget" name="widget" native="true">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
         </widget>
        </item>
       </layout>
@@ -291,10 +261,10 @@
      <widget class="QListWidget" name="listWidget">
       <property name="geometry">
        <rect>
-        <x>865</x>
-        <y>50</y>
-        <width>287</width>
-        <height>451</height>
+        <x>891</x>
+        <y>40</y>
+        <width>241</width>
+        <height>461</height>
        </rect>
       </property>
       <property name="autoScroll">
@@ -343,13 +313,39 @@
       <property name="geometry">
        <rect>
         <x>950</x>
-        <y>20</y>
+        <y>10</y>
         <width>151</width>
         <height>18</height>
        </rect>
       </property>
       <property name="text">
        <string>추가된 동영상</string>
+      </property>
+     </widget>
+     <widget class="QSlider" name="horizontalSlider">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>470</y>
+        <width>811</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="time">
+      <property name="geometry">
+       <rect>
+        <x>780</x>
+        <y>500</y>
+        <width>77</width>
+        <height>18</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
       </property>
      </widget>
     </widget>
@@ -399,7 +395,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1179</width>
+     <width>1198</width>
      <height>31</height>
     </rect>
    </property>
@@ -410,10 +406,11 @@
   <customwidget>
    <class>QVideoWidget</class>
    <extends>QWidget</extends>
-   <header>PyQt5.QtMultimediaWidgets</header>
+   <header location="global">PyQt5.QtMultimediaWidgets</header>
    <container>1</container>
    <slots>
     <slot>PlayButtonM()</slot>
+    <slot>StopMomentButtonM()</slot>
    </slots>
   </customwidget>
  </customwidgets>
