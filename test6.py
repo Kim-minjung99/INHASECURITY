@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-##이거는 카메라를 틀어서 진행시키는것 
+##이거는 카메라를 틀어서 진행시키는것
+#지금 동영상 저장 도중 코덱 문제로 저장이 원활하게 안되는거 같으니까 코덱을 설치해주는게 좋겠다.
 import numpy as np
 import cv2
 import sys
@@ -18,8 +19,17 @@ import datetime
 face_cascade = cv2.CascadeClassifier(r"/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_frontalface_default.xml")
 body_cascade = cv2.CascadeClassifier(r"/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_fullbody.xml")
 
-cam = cv2.VideoCapture('/home/pi/Desktop/cctv/savepath/2021-05-10 05:15:07.h264') #저장된 영상 재생
+cam = cv2.VideoCapture('/home/pi/Desktop/cctv/savepath/2021-05-10 05:15:07.h264') #영상을 재생, 영상처리할 동영상을 불러오기, 이 영상을 모자이크 처리할게! -> 변경하고자 하는 영상의 경로를 가져오는것이다 
 #cam = cv2.VideoCapture(0)
+
+
+filename = 'complete.h264' #다음과같은 파일 이름으로 저장하기 , 보니까 이 이름으로 불러왔던 파일 위에 덮어쓰기하는것 같음.
+width = cam.get(cv2.CAP_PROP_FRAME_WIDTH) #다음과 같은 파일의 위아래 값 얻어오기 
+height = cam.get(cv2.CAP_PROP_FRAME_HEIGHT)
+fourcc = cv2.VideoWriter_fourcc('X','2','6','4') #다음과 같은 코덱 명으로 저장할거야 
+fps = cam.get(cv2.CAP_PROP_FPS) #프레임 얻어오기 
+
+out = cv2.VideoWriter(filename, fourcc, fps, (int(width), int(height)))# 동영상 저장 
 
 cam.set(3, 640) # set video widht
 cam.set(4, 480)
@@ -122,9 +132,12 @@ class CVmozaic:
            
         CVMozaic(image)    
         
-        cv2.imshow('camera',image) #화면출력 
+        cv2.imshow('camera',image) #화면출력
+        
     cv2.destroyAllWindows()#누르면 꺼짐 
     cam.release()
+    
+    
     
 
 
