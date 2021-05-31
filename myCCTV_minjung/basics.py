@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import sys
 import logging
 from PyQt5.QtWidgets import *
@@ -36,9 +35,10 @@ class Mozaic(QMainWindow):
         self.qPixmapFileVar = self.qPixmapFileVar.scaledToWidth(200)
         self.cctvlogo.setPixmap(self.qPixmapFileVar)
 
-        #self.PlayButton.clicked.connect(self.PlayButtonM)
+
+        #self.Fullbody_1.clicked.connect(self.Fullbody_1M) 라즈베리파이 첫번째 파이썬 파일 열기
+
         self.StopMomentButton.clicked.connect(self.StopMomentButtonM)
-        # self.PauseButton.clicked.connect(self.PauseButtonM)
         self.HelpButton1.clicked.connect(self.HelpButton1M)
         self.HelpButton2.clicked.connect(self.HelpButton2M)
         self.HelpButton3.clicked.connect(self.HelpButton3M)
@@ -62,7 +62,6 @@ class Mozaic(QMainWindow):
         self.HelpButton3.setStyleSheet('image:url(HELP3.png)')
         self.PlayButton.setStyleSheet('image:url(재생.png)')
         self.StopMomentButton.setStyleSheet('image:url(일시정지.png)')
-        #self.PauseButton.setStyleSheet('image:url(중지.png)')
 
         self.player = QMediaPlayer(None, QMediaPlayer.VideoSurface)
         self.player.setVideoOutput(self.ui.widget)
@@ -75,6 +74,8 @@ class Mozaic(QMainWindow):
         self.player.durationChanged.connect(self.getDuration)
         self.player.positionChanged.connect(self.getPosition)
 
+    # def Fullbody_1M(self):
+    #     exec(open('01_face_dataset.py').read()) #01_face_dataset.py파일 열기
 
     def PlayButtonM(self):
         PlayFile = self.listWidget.currentItem().text()
@@ -99,6 +100,8 @@ class Mozaic(QMainWindow):
     def trainingButtonM(self):
         self.test_logging()
         print(files)
+        #exec(open('02_face_training.py').read()) 라즈베리파이 두번째 파일 열기
+        # exec(open('test6.py').read()) 라즈베리파이 세번째 파일 열기
 
 
     def test_logging(self):
