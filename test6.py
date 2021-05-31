@@ -43,7 +43,7 @@ class CVmozaic:
         #print('a')#이런것들이 없어야 카메라가 열린다.
         ret, image = cam.read()
         #print('aa')
-
+        
         def realimage_call(self,image):# 실제이미지로 돌려주기 
             real_image = cv2.cvtColor(image, cv2.IMREAD_COLOR) 
             image = real_image
@@ -67,7 +67,7 @@ class CVmozaic:
                 
             for (fx,fy,fw,fh) in face:
                     
-                if (cv2.rectangle(image,(fx,fy),(fx+fw,fy+fh),(0,255,255),1)).any() :#얼굴을 인식했는가?
+                if (fx or fy or fw or fh) :#얼굴을 인식했는가?
                     
                     real_image = cv2.resize(image, dsize=(640,480), interpolation=cv2.INTER_LINEAR) #실제 이미지 다시 불러오기
                     
@@ -77,12 +77,9 @@ class CVmozaic:
                     
                     id, confidence = recognizer.predict(grayImage[fy:fy+fh,fx:fx+fw]) ##여기가 제일 문제많이 생김 
                     
+                    
                     if (100-confidence >= 10):
                         
-                        #real_image = cv2.resize(image, dsize=(640,480), interpolation=cv2.INTER_LINEAR)
-                        
-                        #image = real_image
-
                         id = names[id] #사람의 이름 그니까 
 
                         confidence = "  {0}%".format(round(100 - confidence)) #만약 정확도가 100이하라면 100에서 정확도를 뺴서 인식도를 나타내라
@@ -95,17 +92,12 @@ class CVmozaic:
                     
                     
                     elif (100-confidence < 10) :#내가 찾는 사람이 아니다
-                        
                         for (x,y,w,h) in body:
                             
-                            if (cv2.rectangle(image,(x,y),(x+w,y+h),(255,255,0),1)).any() :# 바디를 인식하였는가?
-                                
+                            if (x or y or w or h) :# 바디를 인식하였는가?
                                 print('body Detected')
-            
                                 cv2.rectangle(image,(x,y),(x+w,y+h),(255,255,0),1)
-                                
                                 t=cv2.resize(mozaic, dsize=(w,h), interpolation=cv2.INTER_LINEAR)
-                        
                                 image[y:y+h, x:x+w] = t
                                 
                             else:
