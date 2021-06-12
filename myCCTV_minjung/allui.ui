@@ -41,7 +41,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="Startinitializing">
      <attribute name="title">
@@ -169,6 +169,19 @@
         <width>551</width>
         <height>291</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="Fullbody_1">
+      <property name="geometry">
+       <rect>
+        <x>610</x>
+        <y>20</y>
+        <width>191</width>
+        <height>91</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>인식하기</string>
       </property>
      </widget>
     </widget>

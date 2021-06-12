@@ -49,7 +49,7 @@ class Mozaic(QMainWindow):
         self.pushButton_2.clicked.connect(self.clickDel)
         self.NameButton.clicked.connect(self.NameButtonM)
 
-        #로깅 이벤트 연결
+        #로깅 이벤트 연결, 라즈베리파이 2.3번째 파이썬 파일 열기
         self.TrainingButton.clicked.connect(self.trainingButtonM)
 
         #로그 핸들러 로깅화면에 추가하여 출력시키기
@@ -75,7 +75,7 @@ class Mozaic(QMainWindow):
         self.player.positionChanged.connect(self.getPosition)
 
     # def Fullbody_1M(self):
-    #     exec(open('01_face_dataset.py').read()) #01_face_dataset.py파일 열기
+    #     exec(open('01_fullbody_dataset.py').read()) #01_face_dataset.py파일 열기
 
     def PlayButtonM(self):
         PlayFile = self.listWidget.currentItem().text()
@@ -100,7 +100,7 @@ class Mozaic(QMainWindow):
     def trainingButtonM(self):
         self.test_logging()
         print(files)
-        #exec(open('02_face_training.py').read()) 라즈베리파이 두번째 파일 열기
+        #exec(open('02_fullbody_training.py').read()) 라즈베리파이 두번째 파일 열기
         # exec(open('test6.py').read()) 라즈베리파이 세번째 파일 열기
 
 
@@ -156,17 +156,9 @@ class Mozaic(QMainWindow):
     #     self.VideoLoadpath.setText(files[0])
 
     def SaveButtonM(self):
-        files, ext = QFileDialog.getOpenFileName(self, "모자이크 동영상 선택",
-                                                  ".", "Video Files (*.mp4 *.flv *.ts *.mts *.avi)")  # 동영상 불러오기
-        if files:
-            # cnt = len(files)
-            # row = self.listWidget.count()
-
-            # for i in range(row, row + cnt): # i=cnt
-            self.VideoSavePath.setText(files)
-
-    #     files = QFileDialog.getOpenFileName()
-    #     self.VideoLoadpath.setText(files[0])
+        dirName = QFileDialog.getExistingDirectory(self, self.tr("저장경로 지정"), "./", QFileDialog.ShowDirsOnly)
+        if dirName:
+            self.VideoSavePath.setText(dirName)
 
     def HelpButton1M(self):
         QMessageBox.information(self, "Starting Initializing 도움말", "본 Starting Initializing 서비스는 고객의 얼굴을 인식하여, "
