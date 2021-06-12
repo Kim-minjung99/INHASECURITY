@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+
 import sys
+import threading
 import logging
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
@@ -10,9 +12,13 @@ from PyQt5.QtMultimedia import QMediaPlaylist, QMediaPlayer, QMediaContent
 from PyQt5.QtCore import QUrl, QObject, pyqtSignal
 from PyQt5.QtWidgets import QMessageBox
 
+
+
+
+
 #로깅 출력 형식 지정
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-#global files
+
 #사용자 지정 핸들러 선언
 class LogStringHandler(logging.Handler):
     def __init__(self, log):
@@ -22,34 +28,35 @@ class LogStringHandler(logging.Handler):
     def emit(self, record):
         self.log.append(record.asctime + ' -- ' + record.getMessage())
 
-Gui = 'C:/Users/김민정/PycharmProjects/pythonProject/allui.ui'
+Gui = '/home/pi/INHASECURITY-main/allui.ui'
 
 
 class Mozaic(QMainWindow):
     def __init__(self, parent=None):
         super(Mozaic, self).__init__(parent)
         QDialog.__init__(self, None)
+        #lock.acquire()
         self.ui = uic.loadUi(Gui, self)
         self.qPixmapFileVar = QPixmap()
         self.qPixmapFileVar.load("cctv.png")
         self.qPixmapFileVar = self.qPixmapFileVar.scaledToWidth(200)
         self.cctvlogo.setPixmap(self.qPixmapFileVar)
 
-
-        #self.Fullbody_1.clicked.connect(self.Fullbody_1M) 라즈베리파이 첫번째 파이썬 파일 열기
-
+        #self.PlayButton.clicked.connect(self.PlayButtonM)
         self.StopMomentButton.clicked.connect(self.StopMomentButtonM)
+        # self.PauseButton.clicked.connect(self.PauseButtonM)
         self.HelpButton1.clicked.connect(self.HelpButton1M)
         self.HelpButton2.clicked.connect(self.HelpButton2M)
         self.HelpButton3.clicked.connect(self.HelpButton3M)
 
+        # self.listWidget.itemDoubleClicked.connect(self.dbClickList)
         self.LoadingButton.clicked.connect(self.LoadingButtonM)
         self.SaveButton.clicked.connect(self.SaveButtonM)
         self.pushButton.clicked.connect(self.AddbuttonM)
         self.pushButton_2.clicked.connect(self.clickDel)
         self.NameButton.clicked.connect(self.NameButtonM)
 
-        #로깅 이벤트 연결, 라즈베리파이 2.3번째 파이썬 파일 열기
+        #로깅 이벤트 연결
         self.TrainingButton.clicked.connect(self.trainingButtonM)
 
         #로그 핸들러 로깅화면에 추가하여 출력시키기
@@ -62,20 +69,20 @@ class Mozaic(QMainWindow):
         self.HelpButton3.setStyleSheet('image:url(HELP3.png)')
         self.PlayButton.setStyleSheet('image:url(재생.png)')
         self.StopMomentButton.setStyleSheet('image:url(일시정지.png)')
+        #self.PauseButton.setStyleSheet('image:url(중지.png)')
 
-        self.player = QMediaPlayer(None, QMediaPlayer.VideoSurface)
+        self.player = QMediaPlayer()
+        # self.widget = QVideoWidget()
         self.player.setVideoOutput(self.ui.widget)
         self.ui.PlayButton.clicked.connect(self.PlayButtonM)
+        #lock.release()
 
         #Progress bar
         # 슬라이더 선언
-        self.horizontalSlider.setRange(0, 0)
-        self.horizontalSlider.sliderMoved.connect(self.barChanged)
-        self.player.durationChanged.connect(self.getDuration)
-        self.player.positionChanged.connect(self.getPosition)
-
-    # def Fullbody_1M(self):
-    #     exec(open('01_fullbody_dataset.py').read()) #01_face_dataset.py파일 열기
+        # self.horizontalSlider.setRange(0, 0)
+        # self.horizontalSlider.sliderMoved.connect(self.barChanged)
+        # self.player.durationChanged.connect(self.getDuration)
+        # self.player.positionChanged.connect(self.getPosition)
 
     def PlayButtonM(self):
         PlayFile = self.listWidget.currentItem().text()
@@ -85,24 +92,19 @@ class Mozaic(QMainWindow):
     def StopMomentButtonM(self):
         self.player.pause()
 
-    def getDuration(self, duration): #duration은 동영상의 총 재생시간이다.
-        self.horizontalSlider.setRange(0, duration)
-
-    def getPosition(self, position): #position은 동영상의 현재 재생 시간이다.
-        self.horizontalSlider.setValue(position)
-
-    def barChanged(self, position): #horizontalSlider을 옮겼을때의 셋팅
-        self.player.setPosition(position)
-
+    # def barChanged(self, position):
+    #     self.player.setPosition(position)
+    #
+    # def getDuration(self, duration):
+    #     self.horizontalSlider.setRange(0, duration)
+    #
+    # def getPosition(self,position):
+    #     self.positionSlider.setValue(position)
 
 
     #여기서부터 로그 출력 기능
     def trainingButtonM(self):
         self.test_logging()
-        print(files)
-        #exec(open('02_fullbody_training.py').read()) 라즈베리파이 두번째 파일 열기
-        # exec(open('test6.py').read()) 라즈베리파이 세번째 파일 열기
-
 
     def test_logging(self):
         logging.error('%s')
@@ -141,24 +143,30 @@ class Mozaic(QMainWindow):
         print(Naming)
 
     def LoadingButtonM(self):
-        global files
         files, ext = QFileDialog.getOpenFileName(self, "모자이크 동영상 선택",
                                                  ".", "Video Files (*.mp4 *.flv *.ts *.mts *.avi)")  # 동영상 불러오기
         if files:
-            print("a")
+            # cnt = len(files)
+            # row = self.listWidget.count()
+
+            # for i in range(row, row + cnt): # i=cnt
             self.VideoLoadpath.setText(files)
-            print(files)
-            # return files
-
-
 
     #     files = QFileDialog.getOpenFileName()
     #     self.VideoLoadpath.setText(files[0])
 
     def SaveButtonM(self):
-        dirName = QFileDialog.getExistingDirectory(self, self.tr("저장경로 지정"), "./", QFileDialog.ShowDirsOnly)
-        if dirName:
-            self.VideoSavePath.setText(dirName)
+        files, ext = QFileDialog.getOpenFileName(self, "모자이크 동영상 선택",
+                                                  ".", "Video Files (*.mp4 *.flv *.ts *.mts *.avi)")  # 동영상 불러오기
+        if files:
+            # cnt = len(files)
+            # row = self.listWidget.count()
+
+            # for i in range(row, row + cnt): # i=cnt
+            self.VideoSavePath.setText(files)
+
+    #     files = QFileDialog.getOpenFileName()
+    #     self.VideoLoadpath.setText(files[0])
 
     def HelpButton1M(self):
         QMessageBox.information(self, "Starting Initializing 도움말", "본 Starting Initializing 서비스는 고객의 얼굴을 인식하여, "
@@ -188,7 +196,14 @@ class Mozaic(QMainWindow):
 
 
 if __name__ == "__main__":
+    '''
+    lock = threading.Lock()
+    my_thread = threading.Thread()
+    my_thread.start()'''
+    
     app = QApplication(sys.argv)
     main_dialog = Mozaic()
     main_dialog.show()
+    #my_thread.join()
+    #print("Login Thread is finished")
     app.exec_()
