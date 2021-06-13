@@ -13,10 +13,6 @@
   <property name="windowTitle">
    <string>Mozaic</string>
   </property>
-  <property name="windowIcon">
-   <iconset>
-    <normaloff>cctv.png</normaloff>cctv.png</iconset>
-  </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QLabel" name="cctvlogo">
     <property name="geometry">
@@ -37,7 +33,7 @@
       <x>10</x>
       <y>90</y>
       <width>1161</width>
-      <height>631</height>
+      <height>641</height>
      </rect>
     </property>
     <property name="currentIndex">
@@ -51,8 +47,8 @@
       <property name="geometry">
        <rect>
         <x>30</x>
-        <y>340</y>
-        <width>1111</width>
+        <y>460</y>
+        <width>1091</width>
         <height>101</height>
        </rect>
       </property>
@@ -75,9 +71,9 @@
       <widget class="QPushButton" name="LoadingButton">
        <property name="geometry">
         <rect>
-         <x>990</x>
+         <x>980</x>
          <y>60</y>
-         <width>112</width>
+         <width>111</width>
          <height>34</height>
         </rect>
        </property>
@@ -86,50 +82,11 @@
        </property>
       </widget>
      </widget>
-     <widget class="QGroupBox" name="SaveGroupBox">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>480</y>
-        <width>1111</width>
-        <height>101</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>Save</string>
-      </property>
-      <widget class="QLabel" name="VideoSavePath">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>20</y>
-         <width>951</width>
-         <height>71</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>SaveFile</string>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="SaveButton">
-       <property name="geometry">
-        <rect>
-         <x>990</x>
-         <y>60</y>
-         <width>112</width>
-         <height>34</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Saving</string>
-       </property>
-      </widget>
-     </widget>
      <widget class="QGroupBox" name="InsertNameBox">
       <property name="geometry">
        <rect>
-        <x>610</x>
-        <y>210</y>
+        <x>30</x>
+        <y>340</y>
         <width>531</width>
         <height>101</height>
        </rect>
@@ -166,7 +123,7 @@
        <rect>
         <x>33</x>
         <y>20</y>
-        <width>551</width>
+        <width>1091</width>
         <height>291</height>
        </rect>
       </property>
@@ -174,10 +131,10 @@
      <widget class="QPushButton" name="Fullbody_1">
       <property name="geometry">
        <rect>
-        <x>610</x>
-        <y>20</y>
-        <width>191</width>
-        <height>91</height>
+        <x>960</x>
+        <y>360</y>
+        <width>161</width>
+        <height>81</height>
        </rect>
       </property>
       <property name="text">
@@ -221,7 +178,7 @@
       <property name="geometry">
        <rect>
         <x>60</x>
-        <y>530</y>
+        <y>520</y>
         <width>341</width>
         <height>61</height>
        </rect>
@@ -239,14 +196,14 @@
        <item>
         <widget class="QPushButton" name="PlayButton">
          <property name="text">
-          <string/>
+          <string>PLAY</string>
          </property>
         </widget>
        </item>
        <item>
         <widget class="QPushButton" name="StopMomentButton">
          <property name="text">
-          <string/>
+          <string>PAUSE</string>
          </property>
         </widget>
        </item>
@@ -366,9 +323,9 @@
    <widget class="QWidget" name="horizontalLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>857</x>
+      <x>850</x>
       <y>20</y>
-      <width>301</width>
+      <width>317</width>
       <height>80</height>
      </rect>
     </property>
@@ -382,21 +339,21 @@
      <item>
       <widget class="QPushButton" name="HelpButton1">
        <property name="text">
-        <string/>
+        <string>HELP 1</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="HelpButton2">
        <property name="text">
-        <string/>
+        <string>HELP 2</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="HelpButton3">
        <property name="text">
-        <string/>
+        <string>HELP3</string>
        </property>
       </widget>
      </item>
@@ -409,7 +366,7 @@
      <x>0</x>
      <y>0</y>
      <width>1198</width>
-     <height>31</height>
+     <height>28</height>
     </rect>
    </property>
   </widget>
