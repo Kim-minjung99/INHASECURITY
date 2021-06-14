@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-
+#ui를 실행시키는 화면창과 영상편집하는 코드의 경로가 같아야 데이터 셋 사진이 올바른 경로에 저장이 된다.
+import os
 import sys
-
+import pandas as pd
+import threading
 import logging
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
@@ -28,7 +30,7 @@ class LogStringHandler(logging.Handler):
     def emit(self, record):
         self.log.append(record.asctime + ' -- ' + record.getMessage())
 
-Gui = '/home/pi/Desktop/cctv/allui/allui.ui'
+Gui = '/home/pi/Desktop/cctv/allui.ui'
 
 form_1, base_1 = uic.loadUiType(Gui)
 
@@ -59,7 +61,7 @@ class Mozaic(form_1, base_1):
 
         #로깅 이벤트 연결
         self.TrainingButton.clicked.connect(self.trainingButtonM)
-
+        self.FinalButton.clicked.connect(self.FinalButtonM)
         #로그 핸들러 로깅화면에 추가하여 출력시키기
         logger = logging.getLogger()
         logger.addHandler(LogStringHandler(self.seeResultTraining))
@@ -86,7 +88,13 @@ class Mozaic(form_1, base_1):
         self.player.positionChanged.connect(self.getPosition)
         
     def Fullbody_1M(self):
-        exec(open('./01_fullbody_dataset.py').read()) #01_face_dataset.py파일 열기
+        
+        exec(open('/home/pi/Desktop/cctv/01_fullbody_dataset.py').read()) #01_face_dataset.py파일 열기
+        #execfile("./01_fullbody_dataset.py")
+        
+    my_thread = threading.Thread(target=Fullbody_1M)
+    my_thread.start()
+    my_thread.join()
 
     def PlayButtonM(self):
         PlayFile = self.listWidget.currentItem().text()
@@ -109,8 +117,20 @@ class Mozaic(form_1, base_1):
     #여기서부터 로그 출력 기능
     def trainingButtonM(self):
         self.test_logging()
-        exec(open('02_fullbody_training.py').read()) #라즈베리파이 두번째 파일 열기
-        exec(open('test6.py').read()) #라즈베리파이 세번째 파일 열기
+        exec(open('/home/pi/Desktop/cctv/02_fullbody_training.py').read()) #라즈베리파이 두번째 파일 열기
+        #time.sleep(60)
+    #my_thread1 = threading.Thread(target=trainingButtonM)
+    #my_thread1.start()
+    #my_thread1.join()
+        
+        
+    def FinalButtonM(self):
+        exec(open('/home/pi/Desktop/cctv/test6.py').read()) #라즈베리파이 세번째 파일 열기
+    #my_thread2 = threading.Thread(target=FinalButtonM)
+    #my_thread2.start()
+    #my_thread2.join()
+        
+        
 
     def test_logging(self):
         logging.error('%s')
@@ -146,20 +166,17 @@ class Mozaic(form_1, base_1):
 
     def NameButtonM(self):  # 이름을 가져와서 저장시키기 아직은 print까지밖에 안됨
         Naming = self.Naming.text()
-        print(Naming)
-
-    def LoadingButtonM(self):
+        df = pd.DataFrame({'names':[Naming]})
+        df.to_csv('/home/pi/Desktop/cctv/name.txt',header=False, index=False)
+        
+    def LoadingButtonM(self): #경로데이터를 텍스트파일안에 저장시키기. 이렇게 저장한 경로는 이후 test6파일에 써먹게 된다. 이름또한,
         files, ext = QFileDialog.getOpenFileName(self, "모자이크 동영상 선택",
                                                  ".", "Video Files (*.mp4 *.flv *.ts *.mts *.avi)")  # 동영상 불러오기
         if files:
-            # cnt = len(files)
-            # row = self.listWidget.count()
-
-            # for i in range(row, row + cnt): # i=cnt
+            
             self.VideoLoadpath.setText(files)
-
-    #     files = QFileDialog.getOpenFileName()
-    #     self.VideoLoadpath.setText(files[0])
+            df = pd.DataFrame({'files':[files]})
+            df.to_csv('/home/pi/Desktop/cctv/Filename.txt',header=False, index=False)
 
     
     def HelpButton1M(self):
@@ -191,6 +208,7 @@ class Mozaic(form_1, base_1):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    
     main_dialog = Mozaic()
     main_dialog.show()
     app.exec_()
