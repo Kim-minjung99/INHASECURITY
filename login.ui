@@ -13,10 +13,6 @@
   <property name="windowTitle">
    <string>Login</string>
   </property>
-  <property name="windowIcon">
-   <iconset>
-    <normaloff>cctv.png</normaloff>cctv.png</iconset>
-  </property>
   <widget class="QLabel" name="cctvlogo">
    <property name="geometry">
     <rect>

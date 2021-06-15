@@ -40,7 +40,14 @@ def Detect():
 
     # 이런식으로 사용자의 이름을 사용자 수만큼 추가해준다.
 
-    names = ['None', 'loze', 'junyoung', 'minjung', 'minjung'] #찾고자하는 사람을 등록하여준다. 여기다가 값을 받아서 사람찾기 이름 등록하는 부분을 구현해주면 될듯 
+    #names = ['None', 'loze', 'junyoung', 'minjung', 'minjung'] #찾고자하는 사람을 등록하여준다. 여기다가 값을 받아서 사람찾기 이름 등록하는 부분을 구현해주면 될듯
+    '''
+    data = open('/home/pi/Desktop/cctv/allui/name.txt')
+    [float(num) for num in data.read().split()]
+    '''
+    with open('name.txt','r') as file:
+        names = file.readlines()
+        
 
 
 

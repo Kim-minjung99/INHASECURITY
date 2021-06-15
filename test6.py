@@ -19,14 +19,25 @@ import datetime
 face_cascade = cv2.CascadeClassifier(r"/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_frontalface_default.xml")
 body_cascade = cv2.CascadeClassifier(r"/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_fullbody.xml")
 
-cam = cv2.VideoCapture('/home/pi/Desktop/cctv/savepath/2021-05-10 05:15:07.h264') #영상을 재생, 영상처리할 동영상을 불러오기, 이 영상을 모자이크 처리할게! -> 변경하고자 하는 영상의 경로를 가져오는것이다 
+
+f = open('/home/pi/Desktop/cctv/Filename.txt','r')
+videofile = f.readline()
+videofile = videofile.strip('\n')
+f.close()
+videofile = str(videofile)
+print(videofile)
+
+cam = cv2.VideoCapture(videofile) #영상을 재생, 영상처리할 동영상을 불러오기, 이 영상을 모자이크 처리할게! -> 변경하고자 하는 영상의 경로를 가져오는것이다 여기서는 따옴표 쓰면 안된다. 파일이름에 
 #cam = cv2.VideoCapture(0)
 
 
-filename = 'complete.h264' #다음과같은 파일 이름으로 저장하기 , 보니까 이 이름으로 불러왔던 파일 위에 덮어쓰기하는것 같음.
+#cam = cv2.VideoCapture(filename)
+
+
+filename = 'complete.avi' #다음과같은 파일 이름으로 저장하기 , 보니까 이 이름으로 불러왔던 파일 위에 덮어쓰기하는것 같음.
 width = cam.get(cv2.CAP_PROP_FRAME_WIDTH) #다음과 같은 파일의 위아래 값 얻어오기 
 height = cam.get(cv2.CAP_PROP_FRAME_HEIGHT)
-fourcc = cv2.VideoWriter_fourcc('X','2','6','4') #다음과 같은 코덱 명으로 저장할거야 
+fourcc = cv2.VideoWriter_fourcc(*'XVID')#다음과 같은 코덱 명으로 저장할거야 
 fps = cam.get(cv2.CAP_PROP_FPS) #프레임 얻어오기 
 
 out = cv2.VideoWriter(filename, fourcc, fps, (int(width), int(height)))# 동영상 저장 
@@ -34,26 +45,38 @@ out = cv2.VideoWriter(filename, fourcc, fps, (int(width), int(height)))# 동영�
 cam.set(3, 640) # set video widht
 cam.set(4, 480)
 
-mozaic=cv2.imread('/home/pi/Desktop/cctv/mozaic.png')
-finding=cv2.imread('/home/pi/Desktop/cctv/사진/finding.png')
+mozaic=cv2.imread('/home/pi/Desktop/cctv/mozaic.png',cv2.IMREAD_COLOR)
+finding=cv2.imread('/home/pi/Desktop/cctv/사진/finding.png',cv2.IMREAD_COLOR)
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 recognizer.read('/home/pi/Desktop/cctv/trainer/trainer2.yml')
 
 font = cv2.FONT_HERSHEY_SIMPLEX
 
-id=0
+#id=0
 
-names = ['None', 'loze', 'YangDa99', 'minjung', 'minjung'] #사람이름 하드코딩한것... 나중에 이름 받아와서 처리해야한다.
+names = [line.rstrip('\n') for line in open('/home/pi/Desktop/cctv/name.txt', 'r')] #사람이름 하드코딩한것... 나중에 이름 받아와서 처리해야한다.
+print(names)
 
 
 class CVmozaic:
     
     while cv2.waitKey(27) < 0:
         #print('a')#이런것들이 없어야 카메라가 열린다.
-        ret, image = cam.read()
+        ret, image = cam.read()#이미지를 읽어오지 못한다.
+        print(image)
+        if image is None:
+            break;
+        '''
+        if ret is False:
+            cv2.imread('/home/pi/Desktop/cctv/mozaic.png',cv2.IMREAD_COLOR)
+            
+                # 읽은 이미지를 화면에 표시      --- ③
+               # 창 모두 닫기            --- ⑤
+    
         #print('aa')
-        
+        else:'''
+            
         def realimage_call(self,image):# 실제이미지로 돌려주기 
             real_image = cv2.cvtColor(image, cv2.IMREAD_COLOR) 
             image = real_image
@@ -67,7 +90,7 @@ class CVmozaic:
         
         def CVMozaic(image):
             
-            grayImage = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) #그레이 색상으로 화면 바꿔주기 (인식용.)
+            grayImage = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) #그레이 색상으로 화면 바꿔주기 (인식용.) 이미지가 불러오는게 없는데 그 이미지를 변환하겠다고 하면 당연히 오류가 나지 
             real_image = cv2.cvtColor(image, cv2.IMREAD_COLOR) #이미지를 디폴트 값인 컬러 이미지로 저장 
         
             body = body_cascade.detectMultiScale(grayImage, 1.03,5)
@@ -90,7 +113,7 @@ class CVmozaic:
                     
                     if (100-confidence >= 10):
                         
-                        id = names[id] #사람의 이름 그니까 
+                        id = names #사람의 이름 그니까 
 
                         confidence = "  {0}%".format(round(100 - confidence)) #만약 정확도가 100이하라면 100에서 정확도를 뺴서 인식도를 나타내라
                     
@@ -133,6 +156,7 @@ class CVmozaic:
         CVMozaic(image)    
         
         cv2.imshow('camera',image) #화면출력
+        out.write(image)
         
     cv2.destroyAllWindows()#누르면 꺼짐 
     cam.release()

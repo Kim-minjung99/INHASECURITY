@@ -3,7 +3,7 @@ import cv2
 import os
 
 
-
+print('a')
 cam = cv2.VideoCapture(0) #카메라를 객체로 저장시키고 키겠습니다
 
 cam.set(3, 640) # set video width
@@ -49,7 +49,7 @@ while(True):
 
         # Save the captured image into the datasets folder
 
-        cv2.imwrite("dataset/User." + str(face_id) + '.' + str(count) + ".jpg", gray[y:y+h,x:x+w]) #~의 파일형태로 이미지 저장 
+        cv2.imwrite("dataset/User." + str("User") + '.' + str(count) + ".jpg", gray[y:y+h,x:x+w]) #~의 파일형태로 이미지 저장 
 
         cv2.imshow('image', img)    #관련함수 cv.imread() : 함수를 이용하여 이미지 파일을 읽습니다. 이미지 파일의 경로는 절대/상대경로가 가능합니다.
                                     #cv2.imshow() : 함수는 이미지를 사이즈에 맞게 보여줍니다.

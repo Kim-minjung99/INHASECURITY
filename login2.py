@@ -10,7 +10,7 @@ from PyQt5.QtGui import QPixmap
 
 
 
-login_Gui = '/home/pi/share/login.ui'
+login_Gui = '/home/pi/Desktop/cctv/login.ui'
 
 form_1, base_1 = uic.loadUiType(login_Gui)
 
@@ -20,12 +20,9 @@ class login(form_1,base_1): #MainDialog(QDialog)는 디자이너 위젯을 확�
         super(base_1, self).__init__()
         #self.ui = uic.loadUi(login_Gui,self)
         self.setupUi(self)
-
         self.qPixmapFileVar = QPixmap()
         self.qPixmapFileVar.load("cctv.png")
         self.qPixmapFileVar = self.qPixmapFileVar.scaledToWidth(200)
-        self.cctvlogo.setPixmap(self.qPixmapFileVar)
-
         self.cctvlogo.setPixmap(self.qPixmapFileVar)
         self.pushButton.clicked.connect(self.loginconfirm)
         self.pushButton_2.clicked.connect(self.cancelclick)

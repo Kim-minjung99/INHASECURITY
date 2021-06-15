@@ -11,14 +11,14 @@ import cv2
 import numpy as np
 
 from PIL import Image
-
+#import Image
 import os
 
 
 
 # Path for face image database
 
-path = 'trainervideo'
+path = '/home/pi/Desktop/cctv/trainervideo' #이 파일이 데이터셋이 저장되어있는 경로 
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 
@@ -42,7 +42,7 @@ def getImagesAndLabels(path):
 
         img_numpy = np.array(PIL_img,'uint8')
 
-        id = int(os.path.split(imagePath)[-1].split(".")[1])
+        id = int(os.path.split(imagePath)[-1].split(".")[2])
 
         faces = detector.detectMultiScale(img_numpy)
 
@@ -55,6 +55,8 @@ def getImagesAndLabels(path):
     return faceSamples,ids
 
 print ("\n [INFO] Training faces. It will take a few seconds. Wait ...")
+
+
 
 faces,ids = getImagesAndLabels(path)
 

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+#데이터셋 마련하기 , 지정된 경로로 데이터셋을 저장할거야 영상이랑 무관하다 
 import cv2
 
 import os
@@ -21,9 +22,11 @@ face_detector = cv2.CascadeClassifier('/home/pi/Desktop/cctv/opencv-master/data/
 
 
 # For each person, enter one numeric face id
-
-body_id = input('\n enter user id end press <return> ==>  ') #여기 부분도 고쳐야 할것 같지않나..? 지금 보면 내가 객체가 몇명 있을줄 알고 미리 배열을 선언해서 인식하고있어... 그냥
+f = open("/home/pi/Desktop/cctv/name.txt", 'r')
+body_id = f.readline()
+#여기 부분도 고쳐야 할것 같지않나..? 지금 보면 내가 객체가 몇명 있을줄 알고 미리 배열을 선언해서 인식하고있어... 그냥
 #객체인식하고자 하는 사람 이름 쳐서 친 횟수로 따져서 좀 하면 될것 같은데.. 연관성이 뭘까 고민좀 해보기 또는 그냥 얘가 알아서 count=count+1 해서 나오는 숫자를 배열의 자리로 넘겨주는 식으로 하면 될거같은데?
+f.close()
 
 print("\n [INFO] Initializing body capture. Look the camera and wait ...")
 
@@ -69,7 +72,7 @@ while(True):
 
         # Save the captured image into the datasets folder
 
-        cv2.imwrite("trainervideo/User." + str(body_id) + '.' + str(count) + ".jpg", gray[y:y+h,x:x+w]) #~의 파일형태로 이미지 저장 
+        cv2.imwrite("trainervideo/User." + str(body_id)+ '1' + '.' + str(count) + ".jpg", gray[y:y+h,x:x+w]) #~의 파일형태로 이미지 저장 
 
         cv2.imshow('image', img)    #관련함수 cv.imread() : 함수를 이용하여 이미지 파일을 읽습니다. 이미지 파일의 경로는 절대/상대경로가 가능합니다.
                                     #cv2.imshow() : 함수는 이미지를 사이즈에 맞게 보여줍니다.
@@ -86,7 +89,7 @@ while(True):
 
         break
 
-    elif count >= 400: # Take 30 face sample and stop video
+    elif count >= 20: # Take 30 face sample and stop video
 
          break
 
