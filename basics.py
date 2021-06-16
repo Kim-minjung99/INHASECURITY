@@ -3,6 +3,7 @@
 import os
 import sys
 import pandas as pd
+from time import sleep
 import threading
 import logging
 from PyQt5.QtWidgets import *
@@ -62,17 +63,18 @@ class Mozaic(form_1, base_1):
         #로깅 이벤트 연결
         self.TrainingButton.clicked.connect(self.trainingButtonM)
         self.FinalButton.clicked.connect(self.FinalButtonM)
+        
         #로그 핸들러 로깅화면에 추가하여 출력시키기
-        logger = logging.getLogger()
-        logger.addHandler(LogStringHandler(self.seeResultTraining))
+        #logger = logging.getLogger()
+        #logger.addHandler(LogStringHandler(self.seeResultTraining))
 
 
         
         self.HelpButton1.setStyleSheet('image:url(HELP1.png)')
-        self.HelpButton2.setStyleSheet('image:url(HELP2.png)')
-        self.HelpButton3.setStyleSheet('image:url(HELP3.png)')
-        self.PlayButton.setStyleSheet('image:url(재생.png)')
-        self.StopMomentButton.setStyleSheet('image:url(일시정지.png)')
+        self.HelpButton2.setStyleSheet('image :url(HELP2.png)')
+        self.HelpButton3.setStyleSheet('image :url(HELP3.png)')
+        self.PlayButton.setStyleSheet('image :url(재생.png)')
+        self.StopMomentButton.setStyleSheet('image :url(일시정지.png)')
 
         
 
@@ -116,32 +118,39 @@ class Mozaic(form_1, base_1):
 
     #여기서부터 로그 출력 기능
     def trainingButtonM(self):
-        self.test_logging()
+        #self.test_logging()
         #time.sleep(5)
         exec(open('/home/pi/Desktop/cctv/02_fullbody_training.py').read(), globals()) #라즈베리파이 두번째 파일 열기
         #http://daplus.net/python-%ED%8C%8C%EC%9D%B4%EC%8D%AC-%EC%9D%B8%ED%84%B0%ED%94%84%EB%A6%AC%ED%84%B0-%EB%82%B4%EC%97%90%EC%84%9C-%ED%8C%8C%EC%9D%BC%EC%9D%84-%EC%8B%A4%ED%96%89%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95/
-        #모든 인터프리터에서 전역변수로 쓰일수 있게 하기 위해서는 ,globals()가 필요하다. 자세한 사항은 홈페이지 참조 
+        #모든 인터프리터에서 전역변수로 쓰일수 있게 하기 위해서는 ,globals()가 필요하다. 자세한 사항은 홈페이지 참조
+        '''
         f = open("/home/pi/Desktop/cctv/Imagelog.txt","r")
         while True:
             line = f.readline()
+            line = self.seeResultTraining.setPlainText(line)
             if not line: break
             print(line)
         f.close()
-        
+        '''
         
     def FinalButtonM(self):
         exec(open('/home/pi/Desktop/cctv/test6.py').read(), globals()) #라즈베리파이 세번째 파일 열기
-    #my_thread2 = threading.Thread(target=FinalButtonM)
-    #my_thread2.start()
-    #my_thread2.join()
-        
+        '''
+        f = open("/home/pi/Desktop/cctv/Imagelog.txt","r")
+        while True:
+            line = f.readline()
+            line = self.seeResultTraining.setPlainText(line)
+            if not line: break
+            print(line)
+        f.close()
+        '''
         
 
-    def test_logging(self):
-        logging.error('%s')
-        logging.info('%s')
-        logging.warning('%s')
-        logging.debug('%s')
+    #def test_logging(self):
+        #logging.error('%s')
+        #logging.info('%s')
+        #logging.warning('%s')
+        #logging.debug('%s')
 
         #return '로그 출력 완료'
 

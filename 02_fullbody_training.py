@@ -70,6 +70,8 @@ recognizer.write('trainer/trainer2.yml') # recognizer.save() worked on Mac, but 
 
 # Print the numer of faces trained and end program
 
+#sys.stdout = open('Imagelog.txt','w')
 print("\n [INFO] {0} faces trained. Exiting Program".format(len(np.unique(ids))))
+#sys.stdout.close()
 
 

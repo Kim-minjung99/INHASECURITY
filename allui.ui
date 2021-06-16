@@ -30,14 +30,14 @@
    <widget class="QTabWidget" name="cctvwiget">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>20</x>
       <y>90</y>
-      <width>1161</width>
-      <height>641</height>
+      <width>1151</width>
+      <height>621</height>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="Startinitializing">
      <attribute name="title">
@@ -136,22 +136,12 @@
      <attribute name="title">
       <string>Training</string>
      </attribute>
-     <widget class="QTextBrowser" name="seeResultTraining">
-      <property name="geometry">
-       <rect>
-        <x>50</x>
-        <y>20</y>
-        <width>821</width>
-        <height>461</height>
-       </rect>
-      </property>
-     </widget>
      <widget class="QPushButton" name="TrainingButton">
       <property name="geometry">
        <rect>
-        <x>50</x>
-        <y>502</y>
-        <width>241</width>
+        <x>580</x>
+        <y>470</y>
+        <width>240</width>
         <height>81</height>
        </rect>
       </property>
@@ -162,10 +152,10 @@
      <widget class="QPushButton" name="FinalButton">
       <property name="geometry">
        <rect>
-        <x>340</x>
-        <y>501</y>
+        <x>869</x>
+        <y>470</y>
         <width>241</width>
-        <height>81</height>
+        <height>80</height>
        </rect>
       </property>
       <property name="text">
@@ -342,21 +332,21 @@
      <item>
       <widget class="QPushButton" name="HelpButton1">
        <property name="text">
-        <string/>
+        <string>HELP 1</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="HelpButton2">
        <property name="text">
-        <string/>
+        <string>HELP 2</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="HelpButton3">
        <property name="text">
-        <string/>
+        <string>HELP 3</string>
        </property>
       </widget>
      </item>
