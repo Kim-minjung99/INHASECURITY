@@ -121,10 +121,12 @@ class Mozaic(form_1, base_1):
         exec(open('/home/pi/Desktop/cctv/02_fullbody_training.py').read(), globals()) #라즈베리파이 두번째 파일 열기
         #http://daplus.net/python-%ED%8C%8C%EC%9D%B4%EC%8D%AC-%EC%9D%B8%ED%84%B0%ED%94%84%EB%A6%AC%ED%84%B0-%EB%82%B4%EC%97%90%EC%84%9C-%ED%8C%8C%EC%9D%BC%EC%9D%84-%EC%8B%A4%ED%96%89%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95/
         #모든 인터프리터에서 전역변수로 쓰일수 있게 하기 위해서는 ,globals()가 필요하다. 자세한 사항은 홈페이지 참조 
-        #time.sleep(60)
-    #my_thread1 = threading.Thread(target=trainingButtonM)
-    #my_thread1.start()
-    #my_thread1.join()
+        f = open("/home/pi/Desktop/cctv/Imagelog.txt","r")
+        while True:
+            line = f.readline()
+            if not line: break
+            print(line)
+        f.close()
         
         
     def FinalButtonM(self):

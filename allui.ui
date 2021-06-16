@@ -37,7 +37,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="Startinitializing">
      <attribute name="title">
@@ -342,21 +342,21 @@
      <item>
       <widget class="QPushButton" name="HelpButton1">
        <property name="text">
-        <string>HELP 1</string>
+        <string/>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="HelpButton2">
        <property name="text">
-        <string>HELP 2</string>
+        <string/>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QPushButton" name="HelpButton3">
        <property name="text">
-        <string>HELP3</string>
+        <string/>
        </property>
       </widget>
      </item>
