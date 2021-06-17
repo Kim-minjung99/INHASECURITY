@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import numpy as np
 import cv2
 import picamera
@@ -18,5 +19,5 @@ while True:
     record() #cctv역할로 카메라 촬영 기능 구동. 10초에 한번씩 동영상 촬영. 지정된 경로로 지정된 파일명으로 저장 
 
     
-cam.release()
+camera.release()
 cv2.destroyAllWindows()

@@ -134,7 +134,7 @@ class Mozaic(form_1, base_1):
         '''
         
     def FinalButtonM(self):
-        exec(open('/home/pi/Desktop/cctv/test6.py').read(), globals()) #라즈베리파이 세번째 파일 열기
+        exec(open('/home/pi/Desktop/cctv/03_fullbody_recognition.py').read(), globals()) #라즈베리파이 세번째 파일 열기
         '''
         f = open("/home/pi/Desktop/cctv/Imagelog.txt","r")
         while True:

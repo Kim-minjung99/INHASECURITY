@@ -1,176 +1,152 @@
 # -*- coding: utf-8 -*-
-import cv2
-
+##이거는 카메라를 틀어서 진행시키는것
+#지금 동영상 저장 도중 코덱 문제로 저장이 원활하게 안되는거 같으니까 코덱을 설치해주는게 좋겠다.
 import numpy as np
-
+import cv2
+import sys
+import picamera
 import os
+os.environ['OPENCV_IO_MAX_IMAGE_PIXELS']=str(2**64)
+import datetime
+##샾 두개는 카메라를 키거나 영상 이용시 사용할 코드이다.
+
+###얼굴이 인식되지 않고 바디가 인식되지 않으면 일단 블랙처리인거다 
+###수정 : 얼굴이 인식은 계속적으로 된다. 근데.. 지금 얼굴 인식이 되고 있는데, 그안에서 누군지는 모르고(얼굴만 인식중) 바디가 모자이크 처리가 안될때는 블랙처리 해줘야겠지..
 
 
+
+    
+face_cascade = cv2.CascadeClassifier(r"/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_frontalface_default.xml")
+body_cascade = cv2.CascadeClassifier(r"/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_fullbody.xml")
+
+
+f = open('/home/pi/Desktop/cctv/Filename.txt','r')
+videofile = f.readline()
+videofile = videofile.strip('\n')
+f.close()
+videofile = str(videofile)
+print(videofile)
+
+cam = cv2.VideoCapture(videofile) #영상을 재생, 영상처리할 동영상을 불러오기, 이 영상을 모자이크 처리할게! -> 변경하고자 하는 영상의 경로를 가져오는것이다 여기서는 따옴표 쓰면 안된다. 파일이름에 
+#cam = cv2.VideoCapture(0)
+
+
+#cam = cv2.VideoCapture(filename)
+
+
+filename = 'complete.avi' #다음과같은 파일 이름으로 저장하기 , 보니까 이 이름으로 불러왔던 파일 위에 덮어쓰기하는것 같음.
+width = cam.get(cv2.CAP_PROP_FRAME_WIDTH) #다음과 같은 파일의 위아래 값 얻어오기 
+height = cam.get(cv2.CAP_PROP_FRAME_HEIGHT)
+fourcc = cv2.VideoWriter_fourcc('M','J','P','G')#다음과 같은 코덱 명으로 저장할거야 
+fps = cam.get(cv2.CAP_PROP_FPS) #프레임 얻어오기 
+
+out = cv2.VideoWriter(filename, fourcc, fps, (int(width), int(height)))# 동영상 저장 
+
+cam.set(3, 640) # set video widht
+cam.set(4, 480)
+
+mozaic=cv2.imread('/home/pi/Desktop/cctv/mozaic.png',cv2.IMREAD_COLOR)
+finding=cv2.imread('/home/pi/Desktop/cctv/사진/finding.png',cv2.IMREAD_COLOR)
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
+recognizer.read('/home/pi/Desktop/cctv/trainer/trainer2.yml')
 
-recognizer.read('/home/pi/Desktop/cctv/trainer/trainer.yml')
+font = cv2.FONT_HERSHEY_SIMPLEX
+
+#id=0
+
+names = [line.rstrip('\n') for line in open('/home/pi/Desktop/cctv/name.txt', 'r')] #사람이름 하드코딩한것... 나중에 이름 받아와서 처리해야한다.
+print(names)
 
 
-def Detect():
+class CVmozaic:
     
-    body_detect = False
-
-    cascadePath = "/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_frontalface_default.xml"
-
-    faceCascade = cv2.CascadeClassifier(cascadePath);
-    
-
-    body_detector = cv2.CascadeClassifier('/home/pi/Desktop/cctv/opencv-master/data/haarcascades/haarcascade_upperbody.xml')
-
-    
-
-
-    font = cv2.FONT_HERSHEY_SIMPLEX
-
-
-
-    #iniciate id counter
-
-    id = 0
-
-
-
-    # names related to ids: example ==> loze: id=1,  etc
-
-    # 이런식으로 사용자의 이름을 사용자 수만큼 추가해준다.
-
-    #names = ['None', 'loze', 'junyoung', 'minjung', 'minjung'] #찾고자하는 사람을 등록하여준다. 여기다가 값을 받아서 사람찾기 이름 등록하는 부분을 구현해주면 될듯
-    '''
-    data = open('/home/pi/Desktop/cctv/allui/name.txt')
-    [float(num) for num in data.read().split()]
-    '''
-    with open('name.txt','r') as file:
-        names = file.readlines()
+    while cam.isOpened():
+        #print('a')#이런것들이 없어야 카메라가 열린다.
+        ret, image = cam.read()#이미지를 읽어오지 못한다.
+        #sys.stdout = open('Imagelog.txt','a')
+        print(image)
+        #sys.stdout.close() #이미지 인식 과정을 (로그)텍스트 파일 안에 저장하고 이를 나중에 textbrowser에 불러올것이다.
+        if image is None:
+            break;
         
-
-
-
-    # Initialize and start realtime video capture
-
-    cam = cv2.VideoCapture(0)
-    #cam=cv2.imread('/home/pi/Desktop/cctv/test.png')
-
-    cam.set(3, 640) # set video widht
-
-    cam.set(4, 480) # set video height
-
-
-
-    # Define min window size to be recognized as a face
-
-    minW = 0.1*cam.get(3)
-
-    minH = 0.1*cam.get(4)
-
-
-
-    while True:
-
-        ret, img =cam.read()
-
-        #img = cv2.flip(img, 1) # Flip vertically
-
-        gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
-    
-        faces = faceCascade.detectMultiScale( 
-
-            gray,
-
-            scaleFactor = 1.2,
-
-            minNeighbors = 5,
-
-            minSize = (int(minW), int(minH)),
-
-           )
-    
-        bodies = body_detector.detectMultiScale( 
-
-            gray,
-
-            scaleFactor = 1.2,
-
-            minNeighbors = 5,
-
-            minSize = (int(minW), int(minH)),
-
-           )
-    
-    
-        
-        for (x,y,w,h) in faces:
-        
-            cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
-        
-            id, confidence = recognizer.predict(gray[y:y+h,x:x+w])
-        
-        # Check if confidence is less them 100 ==> "0" is perfect match
-            if (100-confidence  >= 55):
-
-                id = names[id] #사람의 이름 그니까 
-
-                confidence = "  {0}%".format(round(100 - confidence)) #만약 정확도가 100이하라면 100에서 정확도를 뺴서 인식도를 나타내라
             
-                cv2.putText(img, str(id), (x+5,y-5), font, 1, (255,255,255), 2) #사람이름 이름 출력 
-
-                cv2.putText(img, str(confidence), (x+5,y+h-5), font, 1, (255,255,0), 1)  #정확도 퍼센트 출력 
+        def realimage_call(self,image):# 실제이미지로 돌려주기 
+            real_image = cv2.cvtColor(image, cv2.IMREAD_COLOR) 
+            image = real_image
+            return image
             
+            
+        def mozaicimage_call(self,image):# 블랙처리 이미지로 돌려주기 
+            finding_image = cv2.resize(finding, dsize=(640, 480), interpolation=cv2.INTER_LINEAR) #블랙처리 이미지 선언
+            image = finding_image
+            return image
         
-            #elif (100-confidence <= 55) :
+        def CVMozaic(image):
             
-            else :
+            grayImage = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) #그레이 색상으로 화면 바꿔주기 (인식용.) 이미지가 불러오는게 없는데 그 이미지를 변환하겠다고 하면 당연히 오류가 나지 
+            real_image = cv2.cvtColor(image, cv2.IMREAD_COLOR) #이미지를 디폴트 값인 컬러 이미지로 저장 
+        
+            body = body_cascade.detectMultiScale(grayImage, 1.03,5)
+            face = face_cascade.detectMultiScale(grayImage, 1.03,5)
             
-                cv2.putText(img, "UNKNOWN", (x+5,y-5), font, 1, (255,255,255), 2) #사람이름 이름 출력
+            #mozaicimage_call()
+            #여기 밑으로 블랙처리 코드를 넣으면 먹질 않음... for문으로 이미지 받아들이는 형태가 달라서 그런가 
                 
-                if body_detect:
-                
-                    for (bx,by,bw,bh) in bodies:
+            for (fx,fy,fw,fh) in face:
+                if (fx or fy or fw or fh) :#얼굴을 인식했는가?
+                    #image = cv2.resize(image, dsize=(640,480), interpolation=cv2.INTER_LINEAR) #실제 이미지 다시 불러오기
+                    print('face Detected')
+                    cv2.rectangle(image,(fx,fy),(fx+fw,fy+fh),(0,255,255),1)                    
+                    id, confidence = recognizer.predict(grayImage[fy:fy+fh,fx:fx+fw]) ##여기가 제일 문제많이 생김                                         
+                    if (100-confidence >= 10):                        
+                        id = names #사람의 이름 그니까 
+                        confidence = "  {0}%".format(round(100 - confidence)) #만약 정확도가 100이하라면 100에서 정확도를 뺴서 인식도를 나타내라                    
+                        cv2.putText(image, str(id), (fx+5,fy-5), font, 1, (255,255,255), 2) #사람이름 이름 출력 
+                        cv2.putText(image, str(confidence), (fx+5,fy+fh-5), font, 1, (255,255,0), 1)  #정확도 퍼센트 출력
+                                
+                    elif (100-confidence < 10) :#내가 찾는 사람이 아니다
+                        for (x,y,w,h) in body:
+                            
+                            if (x or y or w or h) :# 바디를 인식하였는가?
+                                print('body Detected')
+                                cv2.rectangle(image,(x,y),(x+w,y+h),(255,255,0),1)
+                                t=cv2.resize(mozaic, dsize=(w,h), interpolation=cv2.INTER_LINEAR)
+                                image[y:y+h, x:x+w] = t
+                                
+                            else:
+                                #finding_image = cv2.resize(finding, dsize=(640, 480), interpolation=cv2.INTER_LINEAR)
+                                #image = finding_image
+                                #mozaicimage_call(image)
+                                self.mozaicimage_call(image)
+                        
+                    else: # 얼굴인식이 10%를 넘지도, 10%를 못넘기지도 못한다면 에러처리 
+                        print('detected ERROR')
+                        #finding_image = cv2.resize(finding, dsize=(640, 480), interpolation=cv2.INTER_LINEAR)
+                        #image = finding_image
+                        self.mozaicimage_call(image)
+
                     
-                        cv2.rectangle(img,(bx,by),(bx+bw,by+bh),(255,0,0),2)
-
-                        body_img = img[y:by+bh, x:bx+bw] # 인식된 얼굴 이미지 crop
-
-                        body_img = cv2.resize(body_img, dsize=(0, 0), fx=0.04, fy=0.04) # 축소
-
-                        body_img = cv2.resize(body_img, (bw, bh), interpolation=cv2.INTER_AREA) # 확대
+                else: # 만약 얼굴 rectangle을 그리지 못했다면?
+                    print('Faces are not detected')
+                    #finding_image = cv2.resize(finding, dsize=(640, 480), interpolation=cv2.INTER_LINEAR) #블랙처리 이미지 선언
+                    #image = finding_image
+                    self.mozaicimage_call(image)
         
-
-                        img[y:by+bh, x:bx+bw] = body_img
-                
-                        #m = cv2.resize('/home/pi/Desktop/cctv/mozaic.png',dsize=(h,w), interpolation=cv2.INTER_LINEAR)
-                        #bodyimg[y:y+h, x:x+w] = m
-                
-                        #break
-            
-                    #여기까지 
-
-                   # confidence = "  {0}%".format(round(100 - confidence))
-
-    
-
-            cv2.imshow('camera',img)
+           
+        CVMozaic(image)    
+        
+        cv2.imshow('camera',image) #화면출력
+        out.write(image) #캠이 열려있는동안 영상처리하고 프레임 이미지로 영상저장해야하니까 while문 안에 있어야한다.
+cam.release()
+out.release()
+cv2.destroyAllWindows()#누르면 꺼짐 
     
     
-    #종료준비 
-
-        k = cv2.waitKey(10) & 0xff # Press 'ESC' for exiting video
-
-        if k == 27:
-
-            break
-
-# Do a bit of cleanup
-
-    print("\n [INFO] Exiting Program and cleanup stuff")
     
-    #cv2.imshow(img)
+    
 
-    cam.release()
 
-    cv2.destroyAllWindows()
+
+
+
