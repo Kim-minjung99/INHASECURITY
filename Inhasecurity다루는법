@@ -1,0 +1,9 @@
+01_fullbody_dataset.py, 02_fullbody_training.py, 03_fullbody_recognition.py
+가 완성작이다.
+각각의 파일은 데이터셋 사진 저장 파일, 트레이너(확장자 .yml)저장 파일,
+03은 별도의 파일이 없지만... 영상처리 후 나오는 영상은 03_fullbody_recognition
+과 같은 경로상에 영상저장이 된다.
+
+맨 처음에 cctv역할을 하는 cameraCapture.py 실행시키면 60초마다 영상촬영
+후 저장시켜준다.
+
