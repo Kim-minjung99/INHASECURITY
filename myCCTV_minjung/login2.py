@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import sys
 from PyQt5 import QtCore, QtGui, QtWidgets
 from basics import *
@@ -8,12 +7,8 @@ from PyQt5.QtWidgets import *
 from PyQt5 import uic
 from PyQt5.QtGui import QPixmap
 
-
-
 login_Gui = '/home/pi/Desktop/cctv/allui/login.ui'
-
 form_1, base_1 = uic.loadUiType(login_Gui)
-
 class login(form_1,base_1): #MainDialog(QDialog)는 디자이너 위젯을 확인하고 제일 큰 메인 윈도우의 유형과 이름을 확인해야한다.(이름(유형))
     def __init__(self):
         QDialog.__init__(self, None)
