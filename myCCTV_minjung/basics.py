@@ -14,13 +14,8 @@ from PyQt5.QtMultimedia import QMediaPlaylist, QMediaPlayer, QMediaContent
 from PyQt5.QtCore import QUrl, QObject, pyqtSignal
 from PyQt5.QtWidgets import QMessageBox
 
-
-
-
-
 #로깅 출력 형식 지정
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
 #사용자 지정 핸들러 선언
 class LogStringHandler(logging.Handler):
     def __init__(self, log):
@@ -31,9 +26,7 @@ class LogStringHandler(logging.Handler):
         self.log.append(record.asctime + ' -- ' + record.getMessage())
 
 Gui = '/home/pi/Desktop/cctv/allui.ui'
-
 form_1, base_1 = uic.loadUiType(Gui)
-
 class Mozaic(form_1, base_1):
     def __init__(self, parent=None):
         super(Mozaic, self).__init__(parent)
@@ -44,38 +37,27 @@ class Mozaic(form_1, base_1):
         self.qPixmapFileVar.load("cctv.png")
         self.qPixmapFileVar = self.qPixmapFileVar.scaledToWidth(200)
         self.cctvlogo.setPixmap(self.qPixmapFileVar)
-
         self.Fullbody_1.clicked.connect(self.Fullbody_1M) #라즈베리파이 첫번째 파이썬 파일 열기
-        
         self.StopMomentButton.clicked.connect(self.StopMomentButtonM)
         self.HelpButton1.clicked.connect(self.HelpButton1M)
         self.HelpButton2.clicked.connect(self.HelpButton2M)
         self.HelpButton3.clicked.connect(self.HelpButton3M)
-
-        
         self.LoadingButton.clicked.connect(self.LoadingButtonM)
-        
         self.pushButton.clicked.connect(self.AddbuttonM)
         self.pushButton_2.clicked.connect(self.clickDel)
         self.NameButton.clicked.connect(self.NameButtonM)
-
         #로깅 이벤트 연결
         self.TrainingButton.clicked.connect(self.trainingButtonM)
         self.FinalButton.clicked.connect(self.FinalButtonM)
         #로그 핸들러 로깅화면에 추가하여 출력시키기
         logger = logging.getLogger()
         logger.addHandler(LogStringHandler(self.seeResultTraining))
-
-
-        
+ 
         self.HelpButton1.setStyleSheet('image:url(HELP1.png)')
         self.HelpButton2.setStyleSheet('image:url(HELP2.png)')
         self.HelpButton3.setStyleSheet('image:url(HELP3.png)')
         self.PlayButton.setStyleSheet('image:url(재생.png)')
         self.StopMomentButton.setStyleSheet('image:url(일시정지.png)')
-
-        
-
         self.player = QMediaPlayer(None, QMediaPlayer.VideoSurface)
         self.player.setVideoOutput(self.ui.widget)
         self.ui.PlayButton.clicked.connect(self.PlayButtonM)
@@ -88,10 +70,8 @@ class Mozaic(form_1, base_1):
         self.player.positionChanged.connect(self.getPosition)
         
     def Fullbody_1M(self):
-        
         exec(open('/home/pi/Desktop/cctv/01_fullbody_dataset.py').read()) #01_face_dataset.py파일 열기
         #execfile("./01_fullbody_dataset.py")
-        
     my_thread = threading.Thread(target=Fullbody_1M)
     my_thread.start()
     my_thread.join()
@@ -123,15 +103,12 @@ class Mozaic(form_1, base_1):
     #my_thread1.start()
     #my_thread1.join()
         
-        
     def FinalButtonM(self):
         exec(open('/home/pi/Desktop/cctv/test6.py').read()) #라즈베리파이 세번째 파일 열기
     #my_thread2 = threading.Thread(target=FinalButtonM)
     #my_thread2.start()
     #my_thread2.join()
         
-        
-
     def test_logging(self):
         logging.error('%s')
         logging.info('%s')
@@ -139,7 +116,6 @@ class Mozaic(form_1, base_1):
         logging.debug('%s')
 
         #return '로그 출력 완료'
-
     #여기까지 로그
 
 
